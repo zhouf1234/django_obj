@@ -1,0 +1,96 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">报名信息详情</h4>
+      </div>
+      <div class="modal-body">
+    		<table class="table table-bordered table-hover table-striped table-responsive">
+    			<tbody>
+    				<tr>
+    					<td width="25%">真实姓名</td>
+    					<td width="75%">{{ order.real_name }}</td>
+    				</tr>
+    				<tr>
+    					<td>身份证号</td>
+    					<td>{{ order.idcard}}</td>
+    				</tr>
+    				<tr>
+    					<td>电话</td>
+    					<td>{{ order.phone }}</td>
+    				</tr>
+    				<tr>
+    					<td>用户id</td>
+    					<td>{{ order.user.id }}</td>
+    				</tr>
+    				<tr>
+    					<td>专业分类</td>
+    					<td>{{ order.major_cates.catename }}</td>
+    				</tr>
+    				<tr>
+    					<td>专业名称</td>
+    					<td>{{ order.major.major_name }}</td>
+    				</tr>
+                    <tr>
+    					<td>专业层次</td>
+    					<td>
+                            {% if order.order_level.level == 0 %}
+                                        高起专
+                            {% elif order.order_level.level == 1 %}
+                                        高起本
+                            {% elif order.order_level.level == 2 %}
+                                        专升本
+                            {% endif %}
+                        </td>
+    				</tr>
+    				<tr>
+    					<td>院校名称</td>
+    					<td>{{ order.order_school.name }}</td>
+    				</tr>
+    				<tr>
+    					<td>付款/录取状态</td>
+    					<td>
+                            {% if order.status == 'wfk' %}
+                                        未付款
+                            {% elif order.status == 'yfk' %}
+                                        已付款
+                            {% elif order.status == 'ylq' %}
+                                        已录取
+                            {% elif order.status == 'ysx' %}
+                                        已失效
+                            {% endif %}
+                        </td>
+    				</tr>
+    			</tbody>
+    		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="close">关闭</button>
+
+      </div>
+    </div>
+</div>
+
+<script>
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/order/order_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('报名信息');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/order/order_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('报名信息');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>

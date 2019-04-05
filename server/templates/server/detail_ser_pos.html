@@ -1,0 +1,79 @@
+<div  role="document" style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">服务中心文章详细</h4>
+      </div>
+      <div class="modal-body">
+    		<table class="table table-bordered table-hover table-striped table-responsive">
+    			<tbody>
+    				<tr>
+    					<td width="25%">文章标题</td>
+    					<td width="75%">{{ ser_posts.post_title }}</td>
+    				</tr>
+    				<tr>
+    					<td>文章来源</td>
+    					<td>{{ ser_posts.source }}</td>
+    				</tr>
+    				<tr>
+    					<td>来源链接</td>
+    					<td>{{ ser_posts.source_link}}</td>
+    				</tr>
+    				<tr>
+    					<td>文章内容</td>
+    					<td>{{ ser_posts.post_content|default:' '  }}</td>
+    				</tr>
+    				<tr>
+    					<td>编辑时间</td>
+    					<td>{{ ser_posts.edit_time }}</td>
+    				</tr>
+    				<tr>
+    					<td>阅读人数</td>
+    					<td>{{ ser_posts.views|default:' '  }}</td>
+    				</tr>
+    				<tr>
+    					<td>分类</td>
+    					<td>{{ ser_posts.cateid.server_name }}</td>
+    				</tr>
+                    <tr>
+    					<td>关键字</td>
+    					<td>{{ ser_posts.keywords.key_name }}</td>
+    				</tr>
+    				<tr>
+    					<td>相关院校</td>
+    					<td>{{ ser_posts.server_post_school.name}}</td>
+    				</tr>
+
+    			</tbody>
+    		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="close">关闭</button>
+
+      </div>
+    </div>
+</div>
+
+<script>
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/server/server_posts_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('服务中心文章');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/server/server_posts_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('服务中心文章');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>

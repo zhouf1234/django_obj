@@ -1,0 +1,238 @@
+<script src="/static/ckeditor/ckeditor.js"></script>
+<div role="document"  style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">添加新文章</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-2 control-label">文章标题:</label>
+		    <div class="col-sm-10">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control" id="post_title"  name="post_title" placeholder="请输入文章标题" onkeyup="checkposTitle()" >
+		    </div>
+		  </div>
+            <div class="form-group" id ="na" style="display: none">
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="col-sm-10 post_title"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">文章封面图片:</label>
+		    <div class="col-sm-10">
+		      <label>
+                <img class="avatar-image" src=" " width="300" height="300" alt="">
+                <input type="file" id="post_image" name="post_image">
+            </label>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">文章来源:</label>
+		    <div class="col-sm-10">
+		      <input type="text"  class="form-control" name="source" id="source" placeholder="请输入文章来源" >
+		    </div>
+		  </div>
+         <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">来源链接:</label>
+		    <div class="col-sm-10">
+		      <input type="text"  class="form-control" name="source_link" id="source_link" placeholder="请输入文章来源链接地址">
+		    </div>
+		  </div>
+
+            <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">文章内容:</label>
+		    <div class="col-sm-10">
+		      <textarea name="post_content" id="post_content" cols="82" rows="10"></textarea>
+            </div>
+		  </div>
+
+            <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-2 control-label">标签:</label>
+		    <div class="col-sm-3">
+		      <select class="form-control"  name="tags" id="tags">
+                <option value=" ">请选择标签</option>
+                    {% for ta in tag %}
+                        <option value="{{ ta.id }}">{{ ta.name }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-2 control-label">相关院校:</label>
+		    <div class="col-sm-3">
+		      <select class="form-control"  name="post_school" id="post_school">
+                <option value=" ">请选择院校</option>
+                    {% for sch in post_school %}
+                        <option value="{{ sch.id }}">{{ sch.name }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+		</form>
+      </div>
+
+        <div id="mess"  style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 480px;left:130px;position: absolute;display: none">
+            <h4 style="font-size: 20px;margin-left: 82px;margin-top: 50px;color: red">文章标题已存在！！</h4>
+            <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">重新添加</div>
+            <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+        </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="btn">提交</button>
+      </div>
+    </div>
+</div>
+
+<div class="clear" style="clear: both;"></div>
+<div id="message" class="message" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 630px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 102px;margin-top: 20px;color: black">文章添加成功！</h4>
+    <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">继续添加</div>
+    <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看文章</div>
+</div>
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/posts/posts_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('文章');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/posts/posts_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('文章');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+
+    CKEDITOR.on('instanceReady', function (ev) {
+            // 这个函数里面放的是富文本编辑器就绪之后执行的操作
+            console.log("富文本编辑器初始化成功");
+        });
+
+    // 初始化操作
+    var post_content = CKEDITOR.replace('post_content', {
+        height: 300
+    });
+
+    //验证文章标题是否符合规范，同时让他不能为空
+    function checkposTitle() {
+        var post_title = $('#post_title').val();
+        var re = /^[\u4e00-\u9fa5\w]{1,30}$/;
+        if (!re.test(post_title)) {
+            $('.post_title').html("文章标题不能为空或输入有误！！")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        } else {
+            $('.post_title').html("输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        }
+        return re.test(post_title);
+    }
+
+    $("#post_image").on('change',()=>{
+        var choose_file = $("#post_image")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $(".avatar-image").attr('src',reader.result)
+        }
+
+    });
+
+    function get_str_vall() {
+        let post_title = $("#post_title").val(); //
+        let source = $('#source').val(); //
+        let source_link = $("#source_link").val();
+        let tags = $('#tags option:selected').val(); //
+        let post_school = $('#post_school option:selected').val(); //
+        {#var post_content = CKEDITOR.instances.post_content.getData(); //富文本编辑器的内容，带p标签，有换行#}
+        var post_content=CKEDITOR.instances.post_content.document.getBody().getText(); //取得纯文本,不带p标签，无换行
+
+        let data = {
+            'post_title': post_title,
+            'source': source,
+            'source_link': source_link,
+            'tags': tags,
+            'post_school': post_school,
+            'post_content':post_content,
+        };
+        console.log(data);
+        data = JSON.stringify(data);
+        return data;
+    }
+
+    $('#btn').click(()=>{
+        let data = get_str_vall(); // 文字数据
+
+        formdata = new FormData();
+        formdata.append('data', data);
+        formdata.append('post_image', $("#post_image")[0].files[0]);
+        console.log(formdata);
+
+        if(checkposTitle()){
+            $.ajax({
+                processData: false,
+                contentType: false,
+                url: '/posts/addss_pos/',
+                type: 'post',
+                async: true,
+                data: formdata,
+                success: (data) => {
+                    if (data['status'] === 'success') {  //判断
+                        $('.message').css('display', 'block');
+                    }else if(data['status'] === 'fail'){
+                        $('#mess').css('display', 'block'); //如果为fail，则跳出框
+                    }
+                }
+            })
+        }
+    });
+    //提交成功后跳出的框内的操作
+    $('.list').click(()=>{
+        $.ajax({
+            url:'/posts/posts_list/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html('文章');
+                $('.info').html(data);
+            }
+        })
+    });
+    $('.add').click(()=>{
+        $('.message').css('display','none');
+        $.ajax({
+            url:'/posts/add_pos/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("添加新文章");
+                $(".info").html(data);
+            }
+       })
+    });
+
+</script>

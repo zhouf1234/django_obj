@@ -1,0 +1,80 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">用户详情</h4>
+      </div>
+      <div class="modal-body">
+    		<table class="table table-bordered table-hover table-striped table-responsive">
+    			<tbody>
+    				<tr>
+    					<td width="25%">邮箱</td>
+    					<td width="75%">{{ user.email }}</td>
+    				</tr>
+    				<tr>
+    					<td>手机号</td>
+    					<td>{{ user.phone|default:" "}}</td>
+    				</tr>
+    				<tr>
+    					<td>昵称</td>
+    					<td>{{ user.nickname }}</td>
+    				</tr>
+    				<tr>
+    					<td>注册时间/IP</td>
+    					<td>
+    						{{ user.reg_time|default:" " }},{{ user.reg_ip|default:" " }}
+    					</td>
+    				</tr>
+    				<tr>
+    					<td>最后登录时间/IP</td>
+    					<td>
+    						{{ user.last_time }},{{ user.last_ip }}
+    					</td>
+    				</tr>
+    				<tr>
+    					<td>真实姓名</td>
+    					<td>{{ user.id_name }}</td>
+    				</tr>
+    				<tr>
+    					<td>身份证号</td>
+    					<td>{{ user.id_card }}</td>
+    				</tr>
+    				<tr>
+    					<td>地址</td>
+    					<td>{{ user.address }}</td>
+    				</tr>
+    				<tr>
+    					<td>毕业院校</td>
+    					<td>{{ user.school }}</td>
+    				</tr>
+    				<tr>
+    					<td>专业</td>
+    					<td>{{ user.major }}</td>
+    				</tr>
+    				<tr>
+    					<td>学历</td>
+    					<td>{{ user.education }}</td>
+    				</tr>
+    				<tr>
+    					<td>学位</td>
+    					<td>{{ user.dgree }}</td>
+    				</tr>
+    
+    			</tbody>
+    		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="close">关闭</button>
+
+      </div>
+    </div>
+</div>
+
+<script>
+    $('#close').click(function () {
+        $('.detail').css("display", "none")
+    });
+    $('#close0').click(function () {
+        $('.detail').css("display", "none")
+    });
+</script>

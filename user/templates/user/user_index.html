@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <link rel="stylesheet" href="{% static 'user/css/user_list.css' %}">
+</head>
+<body>
+<table id="customers">
+    <tr>
+        <th>姓名</th>
+        <th>手机</th>
+        <th>邮箱</th>
+        <th>注册时间</th>
+        <th>最近登录</th>
+        <th>操作</th>
+    </tr>
+    {% for user in users.all %}
+        <tr id="userid">
+            <td>{{ user.nickname|default:" " }}</td>
+            <td>{{ user.phone|default:" " }}</td>
+            <td>{{ user.email|default:" " }}</td>
+            <td>{{ user.reg_time|default:" " }}</td>
+            <td>{{ user.last_time|default:"尚未登录" }}|{{ user.last_ip|default:"未知" }}</td>
+            <td class="at">
+                <a href="#">删除</a>
+                <a href="#" data-id="{{ user.id }}" onclick="edit_user(this)">编辑</a>
+                <a href="#" data-id="{{ user.id }}" onclick="detail_user(this)">详细</a>
+                <a href="#" data-id="{{ user.id }}" onclick="edit_pwd(this)">修改密码</a>
+                <a href="#" onclick="change_img(this)" data-id="{{ user.id }}">修改用户头像</a>
+                <a href="#" data-id="{{ user.id }}" onclick='restart_pwd(this)'>发送密码重置邮件</a>
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+<div class="detail">
+
+</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script>
+    function restart_pwd(temp) {
+        var this_op = temp;
+        var user_id = $(this_op).data('id');
+
+        $.ajax({
+            url: '/user/restart_pwd/',
+            type: 'get',
+            data: {
+                'user_id': user_id
+            },
+            success: (data) => {
+                $("#main>h1").html('重置密码');
+                $("#main>.info").html(data);
+            }
+        })
+    }
+
+    function change_img(temp) {
+        var this_op = temp;
+        var user_id = $(this_op).data('id');
+
+        $.ajax({
+            url: '/user/upload/',
+            type: 'get',
+            data: {
+                'user_id': user_id
+            },
+            success: (data) => {
+                $("#main>h1").html('修改头像');
+                $("#main>.info").html(data);
+            }
+        })
+    }
+
+    function edit_pwd(temp) {
+        var this_op = temp;
+        {#$('.detail').css('display','block');#}
+
+        var user_id = $(this_op).data('id');
+
+        $.ajax({
+            url: '/user/edit_pwd/',
+            type: 'get',
+            data: {
+                'user_id': user_id
+            },
+            success: (data) => {
+                $("#main>h1").html('修改密码');
+                $("#main>.info").html(data);
+            }
+        })
+    }
+
+    function detail_user(temp) {
+        var this_op = temp;
+        $('.detail').css('display', 'block');
+
+        var user_id = $(this_op).data('id');
+
+        $.ajax({
+            url: '/user/detail_user/',
+            type: 'post',
+            data: {
+                'user_id': user_id
+            },
+            success: (data) => {
+                $('.detail').html(data);
+            }
+        })
+    }
+
+    function edit_user(temp) {
+        var this_op = temp;
+        var user_id = $(this_op).data('id');
+
+        $.ajax({
+            url: '/user/edit_user/',
+            type: 'get',
+            data: {
+                'user_id': user_id
+            },
+            success: (data) => {
+                $("#main>h1").html('编辑用户信息');
+                $("#main>.info").html(data);
+            }
+        })
+    }
+</script>
+</html>

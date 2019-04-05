@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>院校列表</title>
+    <link rel="stylesheet" href="{% static 'school/school_list.css' %}">
+</head>
+<body>
+{% if school.exists is False %}
+    <p>暂无信息</p>
+{% else %}
+    <table id="customers">
+        <tr>
+            <th width="200">院校名称</th>
+            <th width="200">985</th>
+            <th width="200">211</th>
+            <th width="200">双一流</th>
+            <th width="200">累计报读</th>
+            <th width="200">操作</th>
+        </tr>
+
+        {% for sch in school.all %}
+            <tr>
+                <td>{{ sch.name|default:"  " }}</td>
+                <td>{{ sch.is_985|default:"  " }}</td>
+                <td>{{ sch.is_211|default:"  " }}</td>
+                <td>{{ sch.is_double|default:"  " }}</td>
+                <td>{{ sch.count|default:"xxx" }}</td>
+                <td class="at">
+                    <a href="#">删除</a>
+                    <a href="#" onclick="edit_sch(this)" data-id="{{ sch.id }}">编辑</a>
+                    <a href="##">详细</a>
+                </td>
+            </tr>
+        {% endfor %}
+
+
+    </table>
+{% endif %}
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script>
+    function edit_sch(temp){
+        let this_op = temp;
+        let sch_id = $(this_op).data("id");
+        $.ajax({
+            url:'/school/edit_sch/',
+            type:'get',
+            data:{
+                'sch_id':sch_id
+            },
+            success:(data)=>{
+                 $('#main h1').html("编辑");
+                $('.info').html(data);
+            }
+        })
+    }
+</script>
+</html>

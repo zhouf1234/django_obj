@@ -1,0 +1,363 @@
+<div class="edit" role="document"  data-id="{{ school.id }}" style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">编辑院校信息</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-2 control-label">院校名称:</label>
+		    <div class="col-sm-9">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control"  name="name" value="{{ school.name }}" readonly>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">院校banner图:</label>
+		    <div class="col-sm-10">
+		      <label>
+                <img class="avatar-image" src="/media/{{ school.banner}}" width="300" height="300" alt="">
+                <input type="file" id="avatar-banner" name="banner" value="/media/{{ school.banner }}">
+            </label>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">院校描述:</label>
+		    <div class="col-sm-10">
+		      <textarea name="description" id="description" cols="80" rows="10">{{ school.description|default:"默认" }}</textarea>
+		    </div>
+		  </div>
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">校训:</label>
+		    <div class="col-sm-10">
+		      <textarea name="motto" id="motto" cols="80" rows="3">{{ school.motto|default:"默认" }}</textarea>
+		    </div>
+		  </div>
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">校徽:</label>
+		    <div class="col-sm-10">
+                <label>
+                    <img class="avatar-image2" src="/media/{{ school.emblem}}" alt=""  width="300" height="300">
+                    <input type="file" name="emblem" id="avatar-emblem" value="/media/{{ school.emblem }}">
+                </label>
+		    </div>
+		  </div>
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">报名须知:</label>
+		    <div class="col-sm-10">
+		      <textarea name="enrol_notes" id="enrol_notes" cols="80" rows="10">{{ school.enrol_notes|default:"默认" }}</textarea>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">毕业证图片地址:</label>
+		    <div class="col-sm-10">
+                <label>
+                    <img class="avatar-image3" src="/media/{{ school.diploma_images}}" alt=""  width="300" height="300">
+                    <input type="file" name="diploma_images" id="diploma_images" value="/media/{{ school.diploma_images }}">
+                </label>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">学位证图片地址:</label>
+		    <div class="col-sm-10">
+                <label>
+                    <img class="avatar-image4" src="/media/{{ school.degree_images}}" alt=""  width="300" height="300">
+                    <input type="file" name="degree_images" id="degree_images" value="/media/{{ school.degree_images }}">
+                </label>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputDeDegreeEdit" class="col-sm-2 control-label">是否是985：</label>
+		    <div class="col-sm-10">
+                <input type="radio" name="is_985" value="True" checked>是
+                <input type="radio" name="is_985" value="False">否
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputDeDegreeEdit" class="col-sm-2 control-label">是否是211：</label>
+		    <div class="col-sm-10">
+                <input type="radio" name="is_211" value="True" checked>是
+                <input type="radio" name="is_211" value="False">否
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputDeDegreeEdit" class="col-sm-2 control-label">是否是双一流：</label>
+		    <div class="col-sm-10">
+                <input type="radio" name="is_double" value="True" checked>是
+                <input type="radio" name="is_double" value="False">否
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">招生简章:</label>
+		    <div class="col-sm-10">
+		      <textarea name="brief" id="brief" cols="80" rows="10">{{ school.brief|default:"默认" }}</textarea>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">考试与毕业:</label>
+		    <div class="col-sm-10">
+		      <textarea name="exam" id="exam" cols="80" rows="10">{{ school.exam|default:"默认" }}</textarea>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">累计报读人数:</label>
+		    <div class="col-sm-3">
+                <input type="number"  name="count" id="count" value="{{ school.count|default:'0' }}">人
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputDeDegreeEdit" class="col-sm-2 control-label">状态：</label>
+		    <div class="col-sm-10">
+                <input type="radio" name="is_status" value="True" checked id="">可用
+                <input type="radio" name="is_status" value="False" id="">不可用
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label class="col-sm-2 control-label">院校所在省市:</label>
+		    <div class="col-sm-10 address-select">
+                <select name="sch_pro" id="sch_pro" onchange="have_city(this)">
+                    <option value="{{ school.sch_pro.provinceid }}">{{ school.sch_pro|default:'请选择省份' }}</option>
+                    {% for pro in province.all %}
+                        <option value="{{ pro.provinceid }}">{{pro}}</option>
+                    {% endfor %}
+                </select>
+                <select name="sch_city" id="city">
+                    <option value="{{ school.sch_city.cityid }}">{{ school.sch_city|default:'请选择市' }}</option>
+                </select>
+		    </div>
+		  </div>
+
+		  <div class="form-group" id="type">
+		    <label for="inputAddressEdit" class="col-sm-2 control-label">学校类型:</label>
+		    <div class="col-sm-10">
+
+		    {% for sch in sch_type %}
+                <input type="checkbox" id="school_type" name="school_type" value="{{ sch.id }}">
+                {{ sch.type_name }}
+            {% endfor %}
+            </div>
+		  </div>
+
+        <div class="form-group" id="feature">
+		    <label for="inputAddressEdit" class="col-sm-2 control-label">学校特征:</label>
+		    <div class="col-sm-10">
+		    {% for sch_feature in sch_features %}
+                <input type="checkbox" id="school_feature" name="school_feature" value="{{ sch_feature.id }}">
+                {{ sch_feature.feature_name }}
+            {% endfor %}
+            </div>
+		  </div>
+
+		</form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="btn">提交</button>
+      </div>
+    </div>
+</div>
+<div class="clear" style="clear: both;"></div>
+<div id="messagee" class="messagee" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 1300px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 122px;margin-top: 20px;color: black">编辑成功！</h4>
+    <div class="addd" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 140px;">返回</div>
+</div>
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/school/school_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/school/school_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    function have_city(temp) {
+        var op = temp;
+        proid = $(op).val();//选择省份的id
+        $.ajax({
+            url: '/user/get_city/',
+            type: 'post',
+            data: {
+                'proid': proid
+            },
+            success: (info) => {
+                var city = $('#city');
+                city.empty().append('<option value="{{ school.sch_city.cityid }}">{{ school.sch_city|default:'请选择市' }}</option>');
+                $.each(info.data, function (index, item) {
+                    city.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+
+    }
+
+    $("#btn").click(() => {
+        // 获取用户id
+        let sch_id = $(".edit").data('id');
+        //console.log(sch_id);
+
+        let data = get_str_val(); // 文字数据
+
+        let sch_pro = $('#sch_pro option:selected').val(); //所在省份
+        let sch_city = $('#city option:selected').val(); //所在城市
+
+        formdata = new FormData();
+        formdata.append('data', data);
+        formdata.append('sch_pro', sch_pro);
+        formdata.append('sch_city', sch_city);
+        formdata.append('sch_id', sch_id);
+        formdata.append('banner', $("#avatar-banner")[0].files[0]);
+        formdata.append('emblem', $("#avatar-emblem")[0].files[0]);
+        formdata.append('degree', $("#degree_images")[0].files[0]);
+        formdata.append('diploma', $("#diploma_images")[0].files[0]);
+
+        $.ajax({
+            processData: false,
+            contentType: false,
+            url: '/school/update_sch/',
+            type: 'post',
+            async: true,
+            data: formdata,
+            success: (data) => {
+                console.log(data);
+                {#alert(data)#}
+                $('.messagee').css('display','block');
+            }
+        })
+
+
+    });
+
+
+    function get_str_val() {
+
+        let description = $("#description").val(); // 院校描述
+        let motto = $('#motto').val(); // 校训
+
+        let enrol_notes = $("#enrol_notes").val();
+
+        let is_985 = $("[name='is_985']:checked").val(); // 是否是985
+        let is_211 = $("[name='is_211']:checked").val();
+        let is_double = $("[name='is_double']:checked").val();
+        let brief = $("#brief").val(); // 招生简章
+        let exam = $("#exam").val(); // 考试于毕业
+        let count = $("#count").val();// 累计报读人数
+        let is_status = $("[name='is_status']:checked").val();//是否可用
+
+
+
+        // 处理school_type 和 school_feature 等多选框
+        function show(par) {
+            obj = document.getElementById(par).getElementsByTagName('input');
+            check_val = [];
+            for (k in obj) {
+                if (obj[k].checked)
+                    check_val.push(obj[k].value);
+            }
+            return check_val;
+        }
+
+        school_type = show("type");
+        school_feature = show("feature");
+
+
+        let data = {
+            'description': description,
+            'motto': motto,
+            'enrol_notes': enrol_notes,
+            'is_985': is_985,
+            'is_211': is_211,
+            'is_double': is_double,
+            'brief': brief,
+            'exam': exam,
+            'count': count,
+            'is_status': is_status,
+            'school_type': school_type,
+            'school_feature': school_feature,
+
+        };
+        console.log(data);
+        data = JSON.stringify(data);
+        return data;
+
+
+    }
+
+    $("#avatar-banner").on('change',()=>{
+        var choose_file = $("#avatar-banner")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $(".avatar-image").attr('src',reader.result)
+        }
+
+    });
+    $("#avatar-emblem").on('change',()=>{
+        var choose_file = $("#avatar-emblem")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $(".avatar-image2").attr('src',reader.result)
+        }
+
+    });
+
+    $("#diploma_images").on('change',()=>{
+        var choose_file = $("#diploma_images")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $(".avatar-image3").attr('src',reader.result)
+        }
+
+    });
+
+    $("#degree_images").on('change',()=>{
+        var choose_file = $("#degree_images")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $(".avatar-image4").attr('src',reader.result)
+        }
+
+    });
+
+    $('.addd').click(()=>{
+        $('.messagee').css('display','none');
+        $.ajax({
+                    url: '/school/school_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+</script>

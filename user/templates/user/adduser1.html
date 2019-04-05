@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户信息</title>
+{#    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />#}
+{#    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>#}
+{#    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">#}
+{#    <link rel="stylesheet" href="/static/css/ace.min.css" />#}
+{#    <link rel="stylesheet" href="/static/css/ace-rtl.min.css" />#}
+{#    <link rel="stylesheet" href="/static/css/ace-skins.min.css" />#}
+{#    <link rel="stylesheet" href="/static/css/zhouju-style.css">#}
+{#    <script src="/static/js/ace-extra.min.js"></script>#}
+{#    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>#}
+{#    <script src="/static/js/bootstrap.min.js"></script>#}
+{#    <script src="/static/js/typeahead-bs2.min.js"></script>#}
+{#    <script src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts-en.min.js"></script>#}
+{#    <script src="/static/js/china.js"></script>#}
+{#    <script src="/static/js/ace-elements.min.js"></script>#}
+{#    <script src="/static/js/ace.min.js"></script>#}
+</head>
+<body>
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+
+	  <div class="modal-body">
+	    <form class="form-horizontal">
+		  <div class="form-group">
+		    <label for="inputEmailAdd" class="col-sm-2 control-label">邮箱</label>
+		    <div class="col-sm-10">
+{#		      <input type="email" class="form-control" id="inputEmailAdd">#}
+              <input type="email" class="form-control" name="email" id="email" placeholder="请输入邮箱" onkeyup="checkEmail()">
+		    </div>
+		  </div>
+            <div class="form-group" id = "em" style="display: none">
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="alt email col-sm-10"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputNameAdd" class="col-sm-2 control-label">昵称</label>
+		    <div class="col-sm-10">
+{#		      <input type="text" class="form-control" id="inputNameAdd">#}
+                <input type="text" class="form-control" name="nickname" onkeyup="checkName()" id="nickname" placeholder="请输入用户名" required>
+		    </div>
+		  </div>
+            <div class="form-group" id ="nick" style="display: none">
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="alt nickname col-sm-10"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputPasswordAdd" class="col-sm-2 control-label">密码</label>
+		    <div class="col-sm-10">
+{#		      <input type="password" class="form-control" id="inputPasswordAdd">#}
+                <input type="password" class="form-control" name="password"  id="password" placeholder="请输入密码" required>
+		    </div>
+		  </div>
+            <div class="form-group" id ="pw" style="display: none">
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="alt pwd col-sm-10"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputRePasswordAdd" class="col-sm-2 control-label">确认密码</label>
+		    <div class="col-sm-10">
+{#		      <input type="password" class="form-control" id="inputRePasswordAdd">#}
+                <input type="password" class="form-control" name="repassword"  id="repassword" placeholder="请确认密码" required>
+		    </div>
+		  </div>
+            <div class="form-group" id ="rpw" style="display: none">
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="alt repwd col-sm-10"></p>
+            </div>
+		</form>
+	  </div>
+	  <div class="modal-footer">
+	    <button type="button" class="btn btn-link" data-dismiss="modal" id = "clo">取消</button>
+	    <button type="submit" class="btn btn-primary" form="addForm" id="submit">提交</button>
+	  </div>
+	</div>
+</div>
+<div class="clear" style="clear: both;"></div>
+<div id="message" class="message" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 150px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 102px;margin-top: 20px;color: black">用户添加成功！</h4>
+    <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">继续添加</div>
+    <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+</div>
+</body>
+<script>
+    //验证邮箱，昵称，密码是否符合规范，四个输入框
+    function checkEmail() {
+        var email = $('#email').val();
+        var re = /^\w+@[a-z0-9]+\.[a-z]{2,3}$/;
+        if (!re.test(email)) {
+            $('.email').html('请输入正确邮箱格式！').css({
+                'color': 'red',
+                'font-weight': 'bold'
+            });
+            $('#em').css({
+                'display': 'block',
+            });
+            console.log(1111);
+        } else {
+            console.log(2222);
+            $('.email').html('邮箱输入正确!').css({
+                'color': 'green',
+                'font-weight': 'bold'
+            });
+            $('#em').css({
+                'display': 'block',
+            });
+        }
+
+        return re.test(email);
+    }
+
+    function checkName() {
+        var name = $('#nickname').val();
+        var re = /^[a-zA-Z]\w{5,14}$/;
+        if (!re.test(name)) {
+            $('.nickname').html("请输入6-15位用户名，支持数字字母下滑线,请以字母开头")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#nick').css({
+                'display': 'block',
+            });
+        } else {
+            $('.nickname').html("用户名输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#nick').css({
+                'display': 'block',
+            });
+        }
+        return re.test(name);
+    }
+
+    //* 检验密码是否符合规则
+    // * @param password 要验证的密码
+     //* @param status 是否开启输出模式，值为true或者false，只有开启了输出模式，才会用到info参数，否则不需要传
+     //* @param info 标签名的类名 #test
+    $('#password').keyup(()=>{
+        var password = $("#password").val();
+        checkPassword(password,true);
+    });
+    $('#repassword').keyup(()=>{
+        var password = $("#password").val();
+        var repassword = $('#repassword').val();
+        checkPwdSame(password,repassword,true);
+    });
+
+    function checkPassword(password, status, info) {
+        var pwd = "";
+        var re = /^[a-zA-Z].{5,17}$/;
+
+        if (password) {
+            pwd = password;
+        } else {
+            pwd = $('#password').val();
+        }
+
+        if (status === true) {
+            if (!re.test(pwd)) {
+                if (info) {
+                    $('.' + info).html('请输入6-18位密码，以英文字母开头...').css({
+                        'color': 'red',
+                        'font-weight': 'bold'
+                    });
+                    $('#pw').css({
+                        'display': 'block',
+                      });
+                } else {
+                    $('.pwd').html('请输入6-18位密码，以英文字母开头...').css({
+                        'color': 'red',
+                        'font-weight': 'bold'
+                    });
+                    $('#pw').css({
+                        'display': 'block',
+                      });
+                }
+            } else {
+                if (info) {
+                    $('.' + info).html('密码输入正确').css({
+                        'color': 'green',
+                        'font-weight': 'bold'
+                    });
+                    $('#pw').css({
+                        'display': 'block',
+                      });
+                } else {
+                    $('.pwd').html('密码输入正确').css({
+                        'color': 'green',
+                        'font-weight': 'bold'
+                    });
+                    $('#pw').css({
+                        'display': 'block',
+                      });
+                }
+            }
+        } else {
+            return re.test(password);
+        }
+    }
+    function checkPwdSame(pwd, repwd, status) {
+
+        info = checkPassword(repwd, false);
+        if (status === true) {
+            if (!info) {
+                $('.repwd').html('请输入6-18位密码，开头请使用英文字母!').css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+                $('#rpw').css({
+                        'display': 'block',
+                      });
+                return false;
+            }
+            if (pwd === repwd) {
+                $('.repwd').html('输入正确').css({
+                    'color': 'green',
+                });
+                $('#rpw').css({
+                        'display': 'block',
+                      });
+                return true;
+            } else {
+                $('.repwd').html('两次密码输入不一致!').css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+                $('#rpw').css({
+                        'display': 'block',
+                      });
+                return false;
+            }
+        } else {
+            if (!info) {
+                return false;
+            }
+
+            if (pwd === repwd) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    //提交按钮，提交数据
+    $('#submit').click(()=>{
+        var password = $("#password").val();
+        var repassword = $('#repassword').val();
+        var nickname = $('#nickname').val();
+        var email = $('#email').val();
+
+        if(checkName() && checkEmail() && checkPassword(password,false) && checkPwdSame(password,repassword,false)) {
+            $.ajax({
+                url:'/user/add_user/',
+                type:'post',
+                data:{
+                    'nickname':nickname,
+                    'password':password,
+                    'email':email
+                },
+                success:(data)=>{
+                    if(data['status'] === 'success'){  //判断该用户名是否存在，不存在就成功，存在就显示已存在
+                        $('.message').css('display','block');
+                    }else if(data['status'] === 'fail'){
+                        var tag = data.tagid;       //tagid是view里的json数据：nickname
+                        $('.'+tag).html(data.message).css('color','red'); //在提交时会显示红色字体，用户已存在
+                    }
+                }
+            })
+        }
+
+    });
+    //提交成功后跳出的框内的操作
+    $('.list').click(()=>{
+        $.ajax({
+            url:'/user/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html('用户列表');
+                $('.info').html(data);
+            }
+        })
+    });
+    $('.add').click(()=>{
+        $('.message').css('display','none');
+        {#$('input').val('');#}
+        {#$('.alt').html('');#}
+        $.ajax({
+            url:'/user/add_user/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("添加用户");
+                $(".info").html(data);
+            }
+       })
+    });
+
+    //取消添加用户按钮的点击操作
+    $('#clo').click(()=>{
+        $('.modal-dialog').css('display','none');
+        $("#main h1").css('display','none');
+    });
+</script>
+</html>

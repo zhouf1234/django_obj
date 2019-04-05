@@ -1,0 +1,55 @@
+<div  role="document" style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">附件详细</h4>
+      </div>
+      <div class="modal-body">
+    		<table class="table table-bordered table-hover table-striped table-responsive">
+    			<tbody>
+    				<tr>
+    					<td width="25%">附件名称</td>
+    					<td width="75%">{{ ser_atta.atta_name}}</td>
+    				</tr>
+    				<tr>
+    					<td>添加时间</td>
+    					<td>{{ ser_atta.addtime}}</td>
+    				</tr>
+    				<tr>
+    					<td>存储链接</td>
+    					<td>{{ ser_atta.filename}}</td>
+    				</tr>
+
+    			</tbody>
+    		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="close">关闭</button>
+
+      </div>
+    </div>
+</div>
+
+<script>
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/server/server_atta/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('附件表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/server/server_atta/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('附件表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>

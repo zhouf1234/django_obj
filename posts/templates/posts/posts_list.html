@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章</title>
+</head>
+<body>
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+
+        <div class="row">
+                <div class="col-xs-12" style="margin-top: 10px;margin-bottom: 0px;margin-left: -10px">
+
+{#                            <div class="form-group col-xs-2" style="margin-right: -15px">#}
+{#                                <input type="text" class="form-control" name="keyword"  placeholder="关键字">#}
+{#                            </div>#}
+{#                            &nbsp;#}
+{#                            <div class="form-group col-xs-1" style="margin-right: -15px">#}
+{#                                <button class="btn btn-info form-control">搜索</button>#}
+{##}
+{#                            </div>#}
+                            <div class="form-group col-xs-2">
+                                <button class="btn btn-success form-control col-xs-2" id="add_pos">添加新文章</button>
+                            </div>
+                </div>
+            </div>
+{#        <div class="row">#}
+{#            <div class="col-xs-12" style="padding-top:10px;padding-bottom:10px">#}
+{#										<p class="list-result pull-left">#}
+{#											共#}
+{#											<span class="text-success">18</span>#}
+{#											条结果#}
+{#										</p>#}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+{#                            <tr class="info">  这个tr的class=info和index的info冲突了，导致的bug出现，注释掉#}
+                            <tr>
+                                <th>文章标题</th>
+                                <th>文章来源</th>
+                                <th>编辑时间</th>
+                                <th>阅读人数</th>
+                                <th>标签</th>
+                                <th>相关院校</th>
+                                <th>
+                                    <i class="icon-cog bigger-110"></i>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for pos in posts.all %}
+                                <tr>
+                                    <td>{{ pos.post_title|default:" " }}</td>
+                                    <td>{{ pos.source|default:" " }}</td>
+                                    <td>{{ pos.edit_time|default:" " }}</td>
+                                    <td>{{ pos.views|default:" " }}</td>
+                                    <td>{{ pos.tags.name|default:" " }}</td>
+                                    <td>{{ pos.post_school.name|default:" "  }}</td>
+
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-xs btn-success" href="#" data-id="{{ pos.id }}" onclick="detail_pos(this)">
+                                                <i class="icon-link bigger-120"></i>
+                                                详细
+                                            </button>
+
+                                            <button class="btn btn-xs btn-info" href="#" data-id="{{ pos.id}}" onclick="edit_pos(this)">
+                                                <i class="icon-edit bigger-120"></i>
+                                                编辑
+                                            </button>
+
+                                            <button class="btn btn-xs btn-danger" data-id="{{ pos.id}}" onclick="delete_pos(this)">
+                                                <i class="icon-trash bigger-120"></i>
+                                                删除
+                                            </button>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!-- /.table-responsive -->
+            </div><!-- /span -->
+        </div><!-- /row -->
+
+{#								<div class="row">#}
+{#									<div class="col-xs-12">#}
+{#										<nav aria-label="Page navigation">#}
+{#										  <ul class="pagination">#}
+{#										  	<li>#}
+{#										      <a href="#">#}
+{#										        <span>首页</span>#}
+{#										      </a>#}
+{#										    </li>#}
+{#										     <li>#}
+{#										      <a href="#">#}
+{#										        <span>上一页</span>#}
+{#										      </a>#}
+{#										    </li>#}
+{#										    <li class="active"><a href="#">1</a></li>#}
+{#										    <li><a href="#">2</a></li>#}
+{#										    <li><a href="#">3</a></li>#}
+{#										    <li><a>...</a></li>#}
+{#										    <li><a href="#">4</a></li>#}
+{#										    <li><a href="#">5</a></li>#}
+{#										    <li><a href="#">6</a></li>#}
+{#										    <li>#}
+{#										      <a href="#">#}
+{#										        <span>下一页</span>#}
+{#										      </a>#}
+{#										    </li>#}
+{#										     <li>#}
+{#										      <a href="#">#}
+{#										        <span>最后一页</span>#}
+{#										      </a>#}
+{#										    </li>#}
+{#										  </ul>#}
+{#										</nav>#}
+{#									</div>#}
+{#								</div>#}
+        </div>
+    </div>
+
+</div><!-- /.page-content -->
+
+<div class="clear" style="clear: both;"></div>
+<div id="messageee" class="messageee" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 150px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 102px;margin-top: 20px;color: black">确定删除吗?</h4>
+    <div class="adde" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;color: black">取消</div>
+    <div class="liste" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">确定</div>
+</div>
+
+</body>
+
+<script>
+
+    function detail_pos(temp)          //查看文章
+    {
+        var this_op = temp;
+        var pos_id = $(this_op).data('id');
+
+        $.ajax({
+            url: '/posts/detail_pos/',
+            type: 'post',
+            data:{
+                'pos_id':pos_id
+            },
+            success:(data)=>{
+                $('#main h1').html("文章详细");
+                $('.info').html(data);
+            }
+        })
+    }
+
+    function edit_pos(temp)          //编辑文章
+    {
+        var this_op = temp;
+        var pos_id = $(this_op).data('id');
+
+        $.ajax({
+            url: '/posts/edit_pos/',
+            type: 'get',
+            data:{
+                'pos_id':pos_id
+            },
+            success:(data)=>{
+                $('#main h1').html("编辑文章");
+                $('.info').html(data);
+            }
+        })
+    }
+
+    $('#add_pos').click(()=>{           //添加新文章
+        $.ajax({
+            url:'/posts/add_pos/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html('添加新文章');
+                $('.info').html(data);
+            }
+        })
+   });
+
+    function delete_pos(temp) {      //删除文章，并不是真的删除，而是把status状态变为0
+        var this_op = temp;
+        var pos_id = $(this_op).data('id');
+
+        $('.messageee').css('display', 'block');
+        $('.adde').click(() => {
+            $.ajax({
+                url: '/posts/posts_list/',
+                type: 'get',
+                success: (data) => {
+                    $("#main>h1").html('文章');
+                    $('#main>.info').html(data);
+                }
+            })
+        });
+        $('.liste').click(() => {
+            $.ajax({
+                url: '/posts/delete_pos/',
+                type: 'get',
+                data: {
+                    'pos_id': pos_id
+                },
+                success: (data) => {
+                    $.ajax({
+                        url: '/posts/posts_list/',
+                        type: 'get',
+                        success: (data) => {
+                            $("#main>h1").html('文章');
+                            $('#main>.info').html(data);
+                        }
+                    })
+                }
+            })
+        });
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,348 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">添加新报名信息</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-3 control-label">真实姓名</label>
+		    <div class="col-sm-9">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control"  id= "real_name" name="real_name" placeholder="请输入真实姓名" onkeyup="checkordName()">
+		    </div>
+		  </div>
+            <div class="form-group" id ="na" style="display: none">
+                <p class="col-sm-3 control-label">提示</p>
+                <p class="col-sm-9 real_name"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-3 control-label">身份证号</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control" id="idcard"  name="idcard"  placeholder="请输入身份证号" onkeyup="checkordCard()">
+		    </div>
+		  </div>
+         <div class="form-group" id ="na1" style="display: none">
+                <p class="col-sm-3 control-label">提示</p>
+                <p class="col-sm-9 idcard"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-3 control-label">电话</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control" id="phone"  name="phone"  placeholder="请输入电话号码">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">用户id</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control" id="user"  name="user"  placeholder="请输入用户id" onkeyup="checkordId()">
+		    </div>
+		  </div>
+            <div class="form-group" id ="na2" style="display: none">
+                <p class="col-sm-3 control-label">提示</p>
+                <p class="col-sm-9 user"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-3 control-label">专业分类</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="major_cates" id="major_cates" onchange="have_catess(this)">
+                <option value=" ">请选择专业分类</option>
+                    {% for cate in major_cates %}
+                        <option value="{{ cate.id }}">{{ cate.catename }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">专业名称</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="major" id="major" onchange="have_level(this)"> {# 不能异步。。。还是写异步吧 #}
+                <option value=" ">请选择专业</option>
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">专业层次</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="order_level" id="order_level" onchange="have_schools(this)">
+                <option value=" ">请选择层次</option>
+                </select>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">院校名称</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="order_school" id="order_school">
+                <option value=" ">请选择院校</option>
+                </select>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputEducationEdit" class="col-sm-3 control-label">付款/录取状态</label>
+		    <div class="col-sm-9">
+                <input type="radio" name="status" value="wfk" checked>未付款
+                <input type="radio" name="status" value="yfk">已付款
+                <input type="radio" name="status" value="ylq">已录取
+                <input type="radio" name="status" value="ysx">已失效
+		    </div>
+		  </div>
+
+        <div class="form-group" >
+                <p class="col-sm-3 control-label">提示</p>
+                <p class="col-sm-9" style="color: black">除电话外，必须全部如实填写！</p>
+            </div>
+
+		</form>
+      </div>
+
+        <div id="mess"  style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 220px;left:130px;position: absolute;display: none">
+            <h4 style="font-size: 20px;margin-left: 82px;margin-top: 50px;color: red">用户不存在或必填项未填写！！</h4>
+            <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">重新添加</div>
+            <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+        </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="submit">提交</button>
+      </div>
+    </div>
+</div>
+<div class="clear" style="clear: both;"></div>
+<div id="message" class="message" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 280px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 102px;margin-top: 20px;color: black">报名信息添加成功！</h4>
+    <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">继续添加</div>
+    <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+</div>
+
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/order/order_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('报名信息');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/order/order_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('报名信息');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    function have_catess(temp) {
+        var op = temp;
+        catesid = $(op).val();//实际获取的是专业分类的id
+        $.ajax({
+            url: '/order/get_catess/',
+            type: 'post',
+            data: {
+                'catesid': catesid
+            },
+            success: (info) => {
+                var major = $('#major');
+                var order_school = $('#order_school');
+                var order_level = $('#order_level');
+                order_school.empty().append('<option value="">请选择院校</option>');
+                major.empty().append('<option value="">请选择专业</option>');
+                order_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    major.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+
+    }
+
+    function have_level(temp) {
+        var op = temp;
+        majorid = $(op).val(); //实际获取的是专业列表的id
+        $.ajax({
+            url: '/order/get_level/',
+            type: 'post',
+            data: {
+                'majorid': majorid
+            },
+            success: (info) => {
+                var order_level = $('#order_level');
+                var order_school = $('#order_school');
+                order_school.empty().append('<option value="">请选择院校</option>');
+                order_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    order_level.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+    }
+
+    function have_schools(temp) {
+        var op = temp;
+        levelid = $(op).val(); //实际获取的是层次的值，0，1，2
+
+        var maj = $('#major').val();
+
+        $.ajax({
+            url: '/order/get_schools/',
+            type: 'post',
+            data: {
+                'levelid': levelid,
+                'maj':maj,
+            },
+            success: (info) => {
+                var order_school = $('#order_school');
+                order_school.empty().append('<option value="">请选择院校</option>');
+                $.each(info.data, function (index, item) {
+                    order_school.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+    }
+
+    //验证真实姓名是否符合规范，同时让他不能为空
+    function checkordName() {
+        var real_name = $('#real_name').val();
+        var re = /^[\u4e00-\u9fa5\D]{1,20}$/;
+        if (!re.test(real_name)) {
+            $('.real_name').html("真实姓名不能为空或输入有误！！")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        } else {
+            $('.real_name').html("输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        }
+        return re.test(real_name);
+    }
+    //验证身份证号是否符合规范，同时让他不能为空
+    function checkordCard() {
+        var idcard = $('#idcard').val();
+        var re = /^[\w]{6,18}$/;
+        if (!re.test(idcard)) {
+            $('.idcard').html("输入不符合规范！！")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#na1').css({
+                'display': 'block',
+            });
+        } else {
+            $('.idcard').html("输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#na1').css({
+                'display': 'block',
+            });
+        }
+        return re.test(idcard);
+    }
+    //验证用户id是否符合规范，同时让他不能为空
+    function checkordId() {
+        var user = $('#user').val();
+        var re = /^[\d]{1,6}$/;
+        if (!re.test(user)) {
+            $('.user').html("输入不符合规范！！")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#na2').css({
+                'display': 'block',
+            });
+        } else {
+            $('.user').html("输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#na2').css({
+                'display': 'block',
+            });
+        }
+        return re.test(user);
+    }
+
+    $('#submit').click(()=>{
+        var real_name = $("#real_name").val();
+        var idcard=$('#idcard').val();
+        var phone=$('#phone').val();
+        var user = $('#user').val();
+        var major_cates=$('#major_cates').val();
+        var major = $('#major').val();
+        var order_level=$('#order_level').val();
+        var order_school=$('#order_school').val();
+        var status=$("[name='status']:checked").val();
+
+        if(checkordName()&&checkordCard()&&checkordId()){
+            $.ajax({
+                url: '/order/addss_ord/',
+                type: 'post',
+                data: {
+                    'real_name': real_name,
+                    'idcard':idcard,
+                    'phone':phone,
+                    'user':user,
+                    'major_cates':major_cates,
+                    'major':major,
+                    'order_level':order_level,
+                    'order_school':order_school,
+                    'status':status,
+                },
+                success: (data) => {
+                    if (data['status'] === 'success') {  //判断
+                        $('.message').css('display', 'block');
+                    }else if(data['status'] === 'fail'){
+                        $('#mess').css('display', 'block'); //如果为fail，则跳出框
+                    }
+                }
+            })
+        }
+    });
+    //提交成功后跳出的框内的操作
+    $('.list').click(()=>{
+        $.ajax({
+            url:'/order/order_list/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html('报名信息');
+                $('.info').html(data);
+            }
+        })
+    });
+    $('.add').click(()=>{
+        $('.message').css('display','none');
+        $.ajax({
+            url:'/order/add_ord/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("添加新报名信息");
+                $(".info").html(data);
+            }
+       })
+    });
+</script>

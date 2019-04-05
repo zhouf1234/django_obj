@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<body>
+    <div>
+        <input type="text" name="admin_name" placeholder="请输入用户名" id="name">
+        <br>
+        <input type="password" name="passworld" placeholder="请输入密码" id="pwd">
+        <button id="btn">登录</button>
+    </div>
+    <div id="info" style="color: red;font-size: 20px;">
+
+    </div>
+</body>
+<script>
+    $(()=>{
+
+        $("#btn").bind("click",()=>{
+            // 获取用户输入信息
+            var admin_name = $("#name").val();
+            var password = $("#pwd").val();
+            var $this = $(this);
+
+            // 进行数据传递
+            $.ajax({
+                url:'/cms/login/',
+                type:'post',
+                data:{
+                    "admin_name":admin_name,
+                    "password":password
+                },
+                success:(data)=>{
+                    console.log(data['message']);
+                    $("#info").html(data['message']);
+                    if (data['status'] === 'success') {
+                        window.location.href = data['info']
+                    }
+                }
+            })
+        });
+
+
+    });
+
+</script>
+</html>

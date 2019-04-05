@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load  static %}
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Index</title>
+    <link rel="stylesheet" href="{% static 'cms/css/index.css' %}">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<body>
+<div class="title">
+    <h1>这里是系统后台,欢迎 {{ request.session.admin_name }} </h1>
+    <a href="##">点击退出</a>
+    <hr>
+</div>
+<div class="clear"></div>
+
+<div class="main">
+    <div class="left" id="nav">
+        <ul>
+            <li>
+                <h3>用户管理</h3>
+                <ul>
+                    <li>
+                        <a href="#" onclick="get_list()">用户列表</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="add_user()">添加用户</a>
+                    </li>
+                    <li>
+                        <a href="##">管理员列表</a>
+                    </li>
+                    <li>
+                        <a href="##">已删除用户</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h3>院校管理</h3>
+                <ul>
+                    <li><a onclick="school_list()" style="cursor: pointer;">院校列表</a></li>
+                    <li><a  style="cursor: pointer;">院校类型</a></li>
+                    <li><a  style="cursor: pointer;">院校特征</a></li>
+                    <li><a  style="cursor: pointer;">已删除信息</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3>专业管理</h3>
+                <ul>
+                    <li><a href="##">专业列表</a></li>
+                    <li><a href="##">专业分类</a></li>
+                    <li><a href="##">已删除信息</a></li>
+                </ul>
+            </li>
+            <li>
+                {#                <a href="##">报名信息管理</a>#}
+                <h3>报名信息管理</h3>
+                <ul>
+                    <li><a href="##">报名信息</a></li>
+                    <li><a href="##">已删除报名信息</a></li>
+                </ul>
+            </li>
+            <li>
+                {#                <a href="##">学员风采</a>#}
+                <h3>学员风采</h3>
+                <ul>
+                    <li><a href="##">文章</a></li>
+                    <li><a href="##">已删除文章</a></li>
+                </ul>
+            </li>
+            <li>
+                {#                <a href="##">服务中心</a>#}
+                <h3>服务中心</h3>
+                <ul>
+                    <li><a href="##">服务中心文章</a></li>
+                    <li><a href="##">服务中心分类</a></li>
+                    <li><a href="##">教学中心</a></li>
+                    <li><a href="##">附件管理</a></li>
+                    <li><a href="##">模拟题管理</a></li>
+                    <li><a href="##">已删除信息</a></li>
+                </ul>
+            </li>
+            <li>
+                {#                <a href="##">系统管理</a>#}
+                <h3>系统管理</h3>
+                <ul>
+                    <li><a href="##">友情链接</a></li>
+                    <li><a href="##">城市信息</a></li>
+                    <li><a href="##">已删除信息</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="right" id="main">
+        <h1>网站信息</h1>
+        <div class="info">
+            <p>登录用户:{{ request.session.admin_name }}</p>
+            <p>登录ip:{{ ip }}</p>
+            <p>当前时间:{{ info_time }}</p>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<hr>
+<div class="footer"></div>
+    <span>@管理服务 2018-2019</span>
+</body>
+<script>
+    function school_list(){
+         $.get('/school/school_list/',(data)=>{
+            $('#main h1').html("院校列表");
+                $('.info').html(data);
+        })
+    }
+    // 127.0.0.1:8000/cms/user/
+    function get_list(){
+        $.ajax({
+            url:'/user/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("用户列表");
+                $(".info").html(data);
+            }
+        })
+    }
+    // 127.0.0.1:8000/cms/user/add_user/
+    function add_user(){
+       $.ajax({
+            url:'/user/add_user/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("添加用户");
+                $(".info").html(data);
+            }
+       })
+    }
+</script>
+</html>

@@ -1,0 +1,204 @@
+<div class="edit" data-id="{{ major.id }}" role="document" style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">编辑专业信息</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-2 control-label">专业名称</label>
+		    <div class="col-sm-9">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control major_name"  name="major_name" value="{{major.major_name}}">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">专业简述</label>
+		    <div class="col-sm-9">
+		      <textarea name="major_desciption" class="major_desciption" cols="82" rows="3">{{ major.major_desciption|default:"默认" }}</textarea>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">层次</label>
+		    <div class="col-sm-10">
+                <input type="radio" name="level" value="0" checked>高起专
+                <input type="radio" name="level" value="1">高起本
+                <input type="radio" name="level" value="2">专升本
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-2 control-label">所属院校</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="school" id="school">
+                <option value="{{ major.school.id}}">{{ major.school.name|default:'请选择院校' }}</option>
+                    {% for sch in school %}
+                        <option value="{{ sch.id }}">{{ sch.name }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-2 control-label">所属分类</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="major_category" id="major_category">
+                <option value="{{ major.major_category.id}}">{{ major.major_category.catename|default:'请选择专业分类' }}</option>
+                    {% for cate in major_cates %}
+                        <option value="{{ cate.id }}">{{ cate.catename }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputAddressEdit" class="col-sm-2 control-label">是否推荐</label>
+		    <div class="col-sm-10">
+		        <input type="radio" name="is_recommend" value="0" checked>否
+                <input type="radio" name="is_recommend" value="1">是
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputSchoolEdit" class="col-sm-2 control-label">学制</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="times" name="times" value="{{ major.times|default:"0" }}"> 年
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputMajorEdit" class="col-sm-2 control-label">报读人数</label>
+		    <div class="col-sm-10">
+		      <input type="number"  name="count" id="count" value="{{ major.count|default:'0' }}"> 人
+		    </div>
+		  </div>
+
+        <div class="form-group">
+            <label for="inputAddressEdit" class="col-sm-2 control-label">是否录取快</label>
+            <div class="col-sm-10">
+                <input type="radio" name="is_fast" value="True" checked>否
+                <input type="radio" name="is_fast" value="False">是
+            </div>
+          </div>
+
+        <div class="form-group">
+            <label for="inputAddressEdit" class="col-sm-2 control-label">是否特色专业</label>
+            <div class="col-sm-10">
+                <input type="radio" name="is_special" value="True" checked>否
+                <input type="radio" name="is_special" value="False">是
+            </div>
+          </div>
+
+        <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">专业介绍</label>
+		    <div class="col-sm-9">
+		      <textarea name="detail" class="detail" cols="82" rows="5">{{ major.detail|default:"默认" }}</textarea>
+		    </div>
+		  </div>
+
+		</form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="submit">提交</button>
+      </div>
+    </div>
+</div>
+<div class="clear" style="clear: both;"></div>
+<div id="messagee" class="messagee" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 320px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 122px;margin-top: 20px;color: black">编辑成功！</h4>
+    <div class="addd" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 140px;">返回</div>
+</div>
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/major/major_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('专业列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/major/major_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('专业列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    function get_str_val() {
+        let major_name = $(".major_name").val();
+        let major_desciption = $('.major_desciption').val();
+        let level = $("[name='level']:checked").val();
+        let is_recommend = $("[name='is_recommend']:checked").val();
+        let times = $('.times').val();
+        let count = $('#count').val();
+        let is_fast = $("[name='is_fast']:checked").val();
+        let is_special = $("[name='is_special']:checked").val();
+        let detail = $(".detail").val();
+        let school = $('#school option:selected').val(); //所属院校
+        let major_category = $('#major_category option:selected').val(); //所属分类
+
+        let data = {
+            'major_name': major_name,
+            'major_desciption': major_desciption,
+            'level': level,
+            'is_recommend': is_recommend,
+            'times': times,
+            'count': count,
+            'is_fast': is_fast,
+            'is_special': is_special,
+            'detail': detail,
+            'school':school,
+            'major_category':major_category
+        };
+        console.log(data);
+        data = JSON.stringify(data);
+        return data;
+    }
+
+    $("#submit").click(() => {
+        // 获取id
+        let maj_id = $(".edit").data('id');
+        let data = get_str_val(); // 文字数据和单选框，以及select下拉框
+
+        formdata = new FormData();
+        formdata.append('data', data);
+        formdata.append('maj_id', maj_id);
+
+        $.ajax({
+            processData: false,
+            contentType: false,
+            url: '/major/update_maj/',
+            type: 'post',
+            async: true,
+            data: formdata,
+            success: (data) => {
+                console.log(data);
+                {#alert(data)#}
+                $('.messagee').css('display','block');
+            }
+        })
+
+
+    });
+    $('.addd').click(()=>{
+            $('.messagee').css('display','none');
+            $.ajax({
+                        url: '/major/major_list/',
+                        type: 'get',
+                        success:(data)=>{
+                            $("#main>h1").html('专业列表');
+                            $('#main>.info').html(data);
+                        }
+                    })
+        });
+
+</script>

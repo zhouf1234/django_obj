@@ -1,0 +1,117 @@
+<div  role="document" style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">专业详情</h4>
+      </div>
+      <div class="modal-body">
+    		<table class="table table-bordered table-hover table-striped table-responsive">
+    			<tbody>
+    				<tr>
+    					<td width="25%">专业名称</td>
+    					<td width="75%">{{ major.major_name }}</td>
+    				</tr>
+    				<tr>
+    					<td>专业简述</td>
+    					<td>{{ major.major_desciption|default:' '  }}</td>
+    				</tr>
+    				<tr>
+    					<td>层次</td>
+    					<td>
+                            {% if major.is_recommend == 0 %}
+                                        高起专
+                            {% elif major.is_recommend == 1 %}
+                                        高起本
+                            {% elif major.is_recommend == 2 %}
+                                        专升本
+                            {% endif %}
+                        </td>
+    				</tr>
+    				<tr>
+    					<td>所属院校</td>
+    					<td>{{ major.school.name |default:' ' }}</td>
+    				</tr>
+    				<tr>
+    					<td>所属分类</td>
+    					<td>{{ major.major_category.catename|default:' '  }}</td>
+    				</tr>
+    				<tr>
+    					<td>是否推荐</td>
+    					<td>
+                            {% if major.is_recommend == 1 %}
+                                        是
+                            {% endif %}
+                            {% if major.is_recommend == 0 %}
+                                        否
+                            {% endif %}
+                        </td>
+    				</tr>
+    				<tr>
+    					<td>学制</td>
+    					<td>{{ major.times|default:' '  }}</td>
+    				</tr>
+    				<tr>
+    					<td>报读人数</td>
+    					<td>{{ major.count |default:' ' }}</td>
+    				</tr>
+    				<tr>
+    					<td>是否录取快</td>
+    					<td>
+                            {% if major.is_fast == 1 %}
+                                       是
+                            {% endif %}
+                            {% if major.is_fast == 0 %}
+                                        否
+                            {% endif %}
+                        </td>
+    				</tr>
+    				<tr>
+    					<td>是否特色专业</td>
+    					<td>
+                            {% if major.is_special == 1 %}
+                                    是
+                            {% endif %}
+                            {% if major.is_special == 0 %}
+                                     否
+                            {% endif %}
+                        </td>
+    				</tr>
+    				<tr>
+    				<tr>
+    					<td>专业介绍</td>
+    					<td>{{ major.detail|default:' ' }}</td>
+    				</tr>
+
+    			</tbody>
+    		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="close">关闭</button>
+
+      </div>
+    </div>
+</div>
+
+<script>
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/major/major_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('专业列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/major/major_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('专业列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>

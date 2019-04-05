@@ -1,0 +1,190 @@
+
+<div class="modal-dialog modal-lg" role="document" style="width: 900px" id="yin">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="clo1">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改用户头像</h4>
+      </div>
+      <div class="modal-body">
+		  <div class="row">
+		    <div class="col-sm-2 control-label">当前头像</div>
+		    <div class="col-sm-10">
+                <img src="/media/{{ users.user_img}}" alt="" class="avatar-image" id="avatar-thumbnail">
+{#		      	先使用统一头像吧，media的图片始终404无法显示#}
+{#                <img src="{% static 'user/image/timg.jpg' %}" alt="" class="avatar-image" id="avatar-thumbnail">#}
+		    </div>
+		  </div>
+		  <div class="row">
+		  	<div class="col-sm-2 control-label"></div>
+		  	<div class="col-sm-10">
+		  		<p class="help-block">请上传jpg, gif, png格式的图片，建议图片尺寸为 270×270px，建议图片大小不超过<strong>2MB</strong></p>
+		  	</div>
+		  </div>
+		  <div class="row">
+		    <div class="col-sm-2 control-label"></div>
+		    <div class="col-sm-10">
+		      	<div class="webuploader-demo">
+		      		<div id="filePicker">请选择图片
+                    </div>
+		      	</div>
+                <input type="file" id="avatar-input" style="display:block;">
+		    </div>
+		  </div>
+      </div>
+      <div class="modal-footer">
+         <span id="user-id" data-id="{{ users.id }}"></span>
+        <button type="button" class="btn btn-link" id="clo2">取消</button>
+         <button type="submit" class="btn btn-primary" form="addForm" id="submit-btn">提交</button>
+      </div>
+    </div>
+ </div>
+<div class="clear" style="clear: both;"></div>
+<div id="messagel" class="messagel" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 220px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 122px;margin-top: 20px;color: black">修改头像成功！</h4>
+    <div class="adddl" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 140px;">返回</div>
+</div>
+<script>
+
+	$('#chavModal').on('shown.bs.modal', function(){
+
+		if ($('.webuploader-element-invisible').length == 0) {
+
+			// 初始化Web Uploader
+			var uploader = WebUploader.create({
+
+			    // 选完文件后，是否自动上传。
+			    auto: false,
+
+			    // swf文件路径
+			    swf: 'assets/webuploader/Uploader.swf',
+
+			    // 文件接收服务端。
+			    //server: 'http://webuploader.duapp.com/server/fileupload.php',
+
+			    // 选择文件的按钮。可选。
+			    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+			    pick: {
+			    	id: "#filePicker",
+			    	multiple: false
+			    },
+
+			    // 只允许选择图片文件。
+			    accept: {
+			        title: 'Images',
+			        extensions: 'gif,jpg,jpeg,bmp,png',
+			        mimeTypes: 'image/*',
+			    },
+
+			    //缩略图
+			    thumb: {
+			    	height: 270,
+			    	allowMagnify: true,
+			    	crop: false
+			    },
+			    compress: {
+			    	width: 270,
+			    	height: 270,
+			    	allowMagnify: false,
+			    	crop: false,
+			    	preserveHeaders: true
+			    }
+			});
+
+
+			uploader.on('fileQueued', function(file) {
+				uploader.makeThumb(file, function(error, src){
+					$('#avatar-thumbnail').attr('src', src)
+
+					$('#avatar-thumbnail').cropper({
+						aspectRatio: 1 / 1,
+						crop: function(event) {
+						    console.log(event.detail.x);
+						    console.log(event.detail.y);
+						    console.log(event.detail.width);
+						    console.log(event.detail.height);
+						    console.log(event.detail.rotate);
+						    console.log(event.detail.scaleX);
+						    console.log(event.detail.scaleY);
+						},
+						viewMode: 3
+					});
+
+				});
+				
+			});
+
+
+		}
+	})
+
+    $("#avatar-input").on('change',()=>{
+        var choose_file = $("#avatar-input")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $(".avatar-image").attr('src',reader.result)
+        }
+
+    });
+
+	$("#submit-btn").click(()=>{
+        console.log($("#user-id").data('id'));
+        {#debugger;#}
+        formdata = new FormData();
+        formdata.append('user_id', $("#user-id").data('id'));
+        formdata.append('avatar', $("#avatar-input")[0].files[0]);
+        formdata.append("csrfmiddlewaretoken", $("[name='csrfmiddlewaretoken']").val());
+
+        $.ajax({
+            processData: false,
+            contentType:false,
+            url:'/user/upload/',
+            type:'post',
+            data:formdata,
+            success:(data)=>{
+                if (data.state === 1) {
+                    {#alert('成功');    //成功后会把图片存在media这个文件夹里，models里写好的#}
+                    {#$('#yin').css('display','none');#}
+                    {#$("#main h1").css('display','none');#}
+                    $('.messagel').css('display','block');
+
+                } else {
+                    alert('失败');
+                }
+            }
+        })
+    });
+
+	$('.adddl').click(()=>{                     //点击后回到用户列表页面
+        $('.messagel').css('display','none');
+                $.ajax({
+                        url: '/user/',
+                        type: 'get',
+                        success:(data)=>{
+                            $("#main>h1").html('用户列表');
+                            $('#main>.info').html(data);
+                        }
+                })
+    });
+
+    $('#clo2').click(()=>{
+         $.ajax({
+                    url: '/user/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('用户列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+    $('#clo1').click(()=>{
+         $.ajax({
+                    url: '/user/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('用户列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>更改用户头像</title>
+</head>
+<body>
+
+
+<div id = "yin">
+    <label>
+        <img src="{% static 'user/image/timg.jpg' %}" id="avatar-img" alt="" width="300px" height="300px">
+        <div>
+            头像
+            <input type="file" id="avatar-input" style="display:none;">
+        </div>
+    </label>
+    <span id="user-id" data-id="{{ users.id }}"></span>
+    <input type="button" id="submit-btn" value="提交">
+</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script>
+    $("#avatar-input").on('change',()=>{
+        var choose_file = $("#avatar-input")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $("#avatar-img").attr('src',reader.result)
+        }
+
+    });
+
+    $("#submit-btn").click(()=>{
+        console.log($("#user-id").data('id'));
+        {#debugger;#}
+        formdata = new FormData();
+        formdata.append('user_id', $("#user-id").data('id'));
+        formdata.append('avatar', $("#avatar-input")[0].files[0]);
+        formdata.append("csrfmiddlewaretoken", $("[name='csrfmiddlewaretoken']").val());
+
+        $.ajax({
+            processData: false,
+            contentType:false,
+            url:'/user/upload/',
+            type:'post',
+            data:formdata,
+            success:(data)=>{
+                if (data.state === 1) {
+                    alert('成功');    //成功后会把图片存在media这个文件夹里，models里写好的
+                    $('#yin').css('display','none');
+                    $("#main h1").css('display','none');
+                } else {
+                    alert('失败');
+                }
+            }
+        })
+    })
+</script>
+</html>

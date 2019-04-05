@@ -1,0 +1,224 @@
+
+<div  role="document"   style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">编辑模拟题附件</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-2 control-label">附件名称:</label>
+		    <div class="col-sm-10">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control" id="ques_name"  name="ques_name" value="{{ ser_aqu.ques_name}}" >
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">存储链接:</label>
+		    <div class="col-sm-10">
+		      <input type="text"  class="form-control" name="ques_filename" id="ques_filename" value="{{ ser_aqu.ques_filename }}" >
+		    </div>
+		  </div>
+
+            <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-2 control-label">所属院校</label>
+		    <div class="col-sm-10">
+		      <select class="form-control"  name="ques_school" id="ques_school" onchange="have_maj(this)">
+                <option value="{{ ser_aqu.ques_school.id }} ">{{ ser_aqu.ques_school.name }}</option>
+                    {% for sch in ques_school %}
+                        <option value="{{ sch.id }}">{{ sch.name }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-2 control-label">专业名称</label>
+		    <div class="col-sm-10">
+		      <select class="form-control"  name="ques_major" id="ques_major" onchange="have_lev(this)">
+                <option value="{{ ser_aqu.ques_major.id }} ">{{ ser_aqu.ques_major.major_name }}</option>
+
+                    {% for maj in q_mj_lis %}
+                            <option value="{{ maj.id }}">{{ maj.major_name }}</option>
+                    {% endfor %}
+
+              </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-2 control-label">专业层次</label>
+		    <div class="col-sm-10">
+		      <select class="form-control"  name="ques_level" id="ques_level">
+                <option value="{{ ser_aqu.ques_level.level }} ">
+                    {% if ser_aqu.ques_level.level == 0 %}
+                                高起专
+                    {% elif ser_aqu.ques_level.level == 1 %}
+                                高起本
+                    {% elif ser_aqu.ques_level.level == 2 %}
+                                专升本
+                    {% endif %}
+
+                    {% for maj in majors %}
+                            <option value="{{ maj.level }}">
+                                {% if maj.level == 0 %}
+                                            高起专
+                                {% elif maj.level == 1 %}
+                                            高起本
+                                {% elif maj.level == 2 %}
+                                            专升本
+                                {% endif %}
+                            </option>
+                    {% endfor %}
+
+
+                </option>
+                </select>
+		    </div>
+		  </div>
+
+		</form>
+      </div>
+
+        <input style="display: none" value="{{ ser_aqu.id }}" id="ser_aquid">
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="btn">提交</button>
+      </div>
+    </div>
+</div>
+
+<div class="clear" style="clear: both;"></div>
+<div id="messagee" class="messagee" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 200px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 122px;margin-top: 20px;color: black">编辑成功！</h4>
+    <div class="addd" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 140px;">返回</div>
+</div>
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/server/server_aques/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('模拟题表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/server/server_aques/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('模拟题表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+
+    function have_maj(temp) {
+        var op = temp;
+        schid = $(op).val();//实际获取的是院校的id
+        $.ajax({
+            url: '/server/get_maj/',
+            type: 'post',
+            data: {
+                'schid': schid
+            },
+            success: (info) => {
+                var ques_major = $('#ques_major');
+                var ques_level = $('#ques_level');
+                ques_major.empty().append('<option value="">请选择专业</option>');
+                ques_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    ques_major.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+
+    }
+
+    function have_lev(temp) {
+        var op = temp;
+        majid = $(op).val(); //实际获取的是专业列表的id
+
+        var school = $('#ques_school').val();
+        $.ajax({
+            url: '/server/get_lev/',
+            type: 'post',
+            data: {
+                'majid': majid,
+                'school':school,
+            },
+            success: (info) => {
+                var ques_level = $('#ques_level');
+                ques_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    ques_level.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+    }
+
+    var get_val = ()=>{
+        // 获取具体的值
+        var ques_name = $('#ques_name').val();
+        var ques_filename = $('#ques_filename').val();
+
+        var ques_school = $('#ques_school option:selected').val(); //
+        var ques_major = $('#ques_major option:selected').val(); //
+        var ques_level = $('#ques_level option:selected').val();
+
+        var aqu_data = {
+            'ques_name':ques_name,
+            'ques_filename':ques_filename,
+            'ques_school':ques_school,
+            'ques_major':ques_major,
+            'ques_level':ques_level,
+        };
+        aqu_data = JSON.stringify(aqu_data);
+        return aqu_data;
+    };
+    console.log(get_val());
+    $('#btn').click(()=>{
+
+        var data = get_val();
+            console.log(get_val());
+        var ser_aquid = $('#ser_aquid').val();
+        $.ajax({
+            url:'/server/update_ser_aqu/',
+            type:'post',
+            async:false,
+            data:{
+                'data':data,
+                'ser_aquid':ser_aquid,
+            },
+            success:(data)=>{
+                console.log(data);
+                    $('.messagee').css('display','block');
+                {#alert(data)#}
+                {#alert("修改成功，点击确认后跳转回首页......");#}
+            }
+        })
+    });
+
+    $('.addd').click(()=>{
+        $('.messagee').css('display','none');
+        $.ajax({
+                    url: '/server/server_aques/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('模拟题表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+
+</script>

@@ -1,0 +1,111 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">添加新院校特征</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputinputNameEdit" class="col-sm-3 control-label">特征名称</label>
+		    <div class="col-sm-9">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control" name="fea_name"  id="fea_name" placeholder="请输入院校特征名称">
+		    </div>
+		  </div>
+            <div class="form-group" id ="na" style="display: none;color: red;">
+                <p class="col-sm-3 control-label">提示</p>
+                <p class="col-sm-9">当前院校特征已存在或输入有误！</p>
+            </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-3 control-label">特征说明</label>
+		    <div class="col-sm-9">
+{#                <input type="textarea" class="form-control" name="name"  id="name" placeholder="请输入院校名称">#}
+		      <textarea name="notes" id="notes" cols="53" rows="5" placeholder="请输入院校特征说明"></textarea>
+		    </div>
+          </div>
+        </form>
+      <div style="margin-left: 420px">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="submit">提交</button>
+      </div>
+    </div>
+</div>
+</div>
+
+<div class="clear" style="clear: both;"></div>
+<div id="message" class="message" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 150px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 62px;margin-top: 20px;color: black">院校特征添加成功！</h4>
+    <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">继续添加</div>
+    <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+</div>
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/school/school_fea/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校特征');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/school/school_fea/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校特征');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#submit').click(()=>{
+        var fea_name = $("#fea_name").val();
+        var notes = $('#notes').val();
+
+       $.ajax({
+            url:'/school/addss_schfea/',
+            type:'post',
+            data:{
+                'fea_name':fea_name,
+                'notes':notes,
+            },
+            success:(data)=>{
+                if(data['status'] === 'success'){  //判断该院校特征名是否存在，不存在就成功，存在就显示已存在
+                    $('.message').css('display','block');
+                }else if(data['status'] === 'fail'){
+                    $('#na').css('display','block');
+                }
+            }
+        })
+
+    });
+    //提交成功后跳出的框内的操作
+    $('.list').click(()=>{
+        $.ajax({
+            url:'/school/school_fea/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html('院校特征');
+                $('.info').html(data);
+            }
+        })
+    });
+    $('.add').click(()=>{
+        $('.message').css('display','none');
+        $.ajax({
+            url:'/school/add_schfea/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("添加新院校特征");
+                $(".info").html(data);
+            }
+       })
+    });
+
+</script>

@@ -1,0 +1,260 @@
+
+<div role="document"  style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">添加新模拟题</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-2 control-label">附件名称:</label>
+		    <div class="col-sm-10">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control" id="ques_name"  name="ques_name" placeholder="请输入附件名称" onkeyup="checkposTitle()" >
+		    </div>
+		  </div>
+            <div class="form-group" id ="na" style="display: none">
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="col-sm-10 ques_name"></p>
+            </div>
+
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">存储链接:</label>
+		    <div class="col-sm-10">
+		      <input type="text"  class="form-control" name="ques_filename" id="ques_filename" placeholder="请输入存储链接" onkeyup="checkcenLink()" >
+		    </div>
+		  </div>
+            <div class="form-group" id ="na1" style="display: none">
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="col-sm-10 ques_filename"></p>
+            </div>
+
+            <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-2 control-label">所属院校</label>
+		    <div class="col-sm-10">
+		      <select class="form-control"  name="ques_school" id="ques_school" onchange="have_maj(this)">
+                <option value=" ">请选择院校</option>
+                    {% for sch in ques_school %}
+                        <option value="{{ sch.id }}">{{ sch.name }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-2 control-label">专业名称</label>
+		    <div class="col-sm-10">
+		      <select class="form-control"  name="ques_major" id="ques_major" onchange="have_lev(this)">
+                <option value=" ">请选择专业</option>
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-2 control-label">专业层次</label>
+		    <div class="col-sm-10">
+		      <select class="form-control"  name="ques_level" id="ques_level">
+                <option value=" ">请选择层次</option>
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group" >
+                <p class="col-sm-2 control-label">提示</p>
+                <p class="col-sm-10" style="color: black">必须全部填写！!</p>
+            </div>
+
+		</form>
+      </div>
+
+        <div id="mess"  style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 120px;left:130px;position: absolute;display: none">
+            <h4 style="font-size: 20px;margin-left: 62px;margin-top: 50px;color: red">模拟题已存在或必填项未填写!</h4>
+            <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">重新添加</div>
+            <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+        </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="btn">提交</button>
+      </div>
+    </div>
+</div>
+
+<div class="clear" style="clear: both;"></div>
+<div id="message" class="message" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 160px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 62px;margin-top: 20px;color: black">模拟题添加成功！</h4>
+    <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">继续添加</div>
+    <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+</div>
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/server/server_aques/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('模拟题表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/server/server_aques/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('模拟题表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    //验证名称是否符合规范，同时让他不能为空
+    function checkposTitle() {
+        var ques_name = $('#ques_name').val();
+        var re = /^[\u4e00-\u9fa5\w]{1,30}$/;
+        if (!re.test(ques_name)) {
+            $('.ques_name').html("名称不能为空或输入有误！！")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        } else {
+            $('.ques_name').html("输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        }
+        return re.test(ques_name);
+    }
+
+    //验证链接是否符合规范，同时让他不能为空
+    function checkcenLink() {
+        var ques_filename = $('#ques_filename').val();
+        var re = /^[\S]{6,30}$/;
+        if (!re.test(ques_filename)) {
+            $('.ques_filename').html("链接地址不能为空或输入有误！！")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#na1').css({
+                'display': 'block',
+            });
+        } else {
+            $('.ques_filename').html("输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#na1').css({
+                'display': 'block',
+            });
+        }
+        return re.test(ques_filename);
+    }
+
+    function have_maj(temp) {
+        var op = temp;
+        schid = $(op).val();//实际获取的是院校的id
+        $.ajax({
+            url: '/server/get_maj/',
+            type: 'post',
+            data: {
+                'schid': schid
+            },
+            success: (info) => {
+                var ques_major = $('#ques_major');
+                var ques_level = $('#ques_level');
+                ques_major.empty().append('<option value="">请选择专业</option>');
+                ques_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    ques_major.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+
+    }
+
+    function have_lev(temp) {
+        var op = temp;
+        majid = $(op).val(); //实际获取的是专业列表的id
+
+        var school = $('#ques_school').val();
+        $.ajax({
+            url: '/server/get_lev/',
+            type: 'post',
+            data: {
+                'majid': majid,
+                'school':school,
+            },
+            success: (info) => {
+                var ques_level = $('#ques_level');
+                ques_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    ques_level.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+    }
+
+    $('#btn').click(()=>{
+        var ques_name = $("#ques_name").val();
+        var ques_filename=$('#ques_filename').val();
+        var ques_school=$('#ques_school').val();
+        var ques_major=$('#ques_major').val();
+        var ques_level=$('#ques_level').val();
+
+        if(checkposTitle()&&checkcenLink()){
+            $.ajax({
+                url: '/server/addss_ser_aqu/',
+                type: 'post',
+                data: {
+                    'ques_name': ques_name,
+                    'ques_filename':ques_filename,
+                    'ques_school':ques_school,
+                    'ques_major':ques_major,
+                    'ques_level':ques_level
+                },
+                success: (data) => {
+                    if (data['status'] === 'success') {  //判断
+                        $('.message').css('display', 'block');
+                    }else if(data['status'] === 'fail'){
+                        $('#mess').css('display', 'block'); //如果为fail，则跳出框
+                    }
+                }
+            })
+        }
+    });
+    //提交成功后跳出的框内的操作
+    $('.list').click(()=>{
+        $.ajax({
+            url:'/server/server_aques/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html('模拟题表');
+                $('.info').html(data);
+            }
+        })
+    });
+    $('.add').click(()=>{
+        $('.message').css('display','none');
+        $.ajax({
+            url:'/server/add_ser_aqu/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("添加新模拟题");
+                $(".info").html(data);
+            }
+       })
+    });
+
+</script>

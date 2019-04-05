@@ -1,0 +1,70 @@
+<div  role="document" style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">教学中心详细</h4>
+      </div>
+      <div class="modal-body">
+    		<table class="table table-bordered table-hover table-striped table-responsive">
+    			<tbody>
+    				<tr>
+    					<td width="25%">中心名称</td>
+    					<td width="75%">{{ ser_center.cen_name}}</td>
+    				</tr>
+    				<tr>
+    					<td>编号</td>
+    					<td>{{ ser_center.cen_num }}</td>
+    				</tr>
+    				<tr>
+    					<td>地址</td>
+    					<td>{{ ser_center.address}}</td>
+    				</tr>
+    				<tr>
+    					<td>电话</td>
+    					<td>{{ ser_center.phone|default:' '  }}</td>
+    				</tr>
+    				<tr>
+    					<td>是否直属</td>
+    					<td>
+                            {% if ser_center.is_direct == 1 %}
+                                        是
+                            {% endif %}
+                            {% if ser_center.is_direct == 0 %}
+                                        否
+                            {% endif %}
+                        </td>
+    				</tr>
+
+    			</tbody>
+    		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="close">关闭</button>
+
+      </div>
+    </div>
+</div>
+
+<script>
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/server/server_center_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('教学中心');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/server/server_center_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('教学中心');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>

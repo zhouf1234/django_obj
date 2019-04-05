@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编辑学校信息</title>
+    {% load static %}
+    <style>
+        #avatar-img {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="edit" data-id="{{ school.id }}">
+    <p>
+        学校名字:
+        <input type="text" value="{{ school.name }}" name="name" disabled>
+    </p>
+    <p>
+        院校banner图:
+        <label>
+            <img id="avatar-img" src="{% static 'user/image/timg.jpg' %}" width="200" height="200" alt="">
+            {#            <div>#}
+            <input type="file" id="avatar-banner" name="banner" hidden onchange="change_img(this)">
+            {#            </div>#}
+        </label>
+    </p>
+    <p>
+        院校描述:
+        <textarea name="description" id="description" cols="30"
+                  rows="10">{{ school.description|default:"默认" }}</textarea>
+    </p>
+    <p>
+        校训:
+        <textarea name="motto" id="motto" cols="30" rows="10">{{ school.motto|default:"默认" }}</textarea>
+    </p>
+    <p>
+        校徽:
+        <label>
+            <img id="avatar-img" src="{% static 'user/image/timg.jpg' %}" alt="" >
+            {#            <div>#}
+            <input type="file" name="emblem" id="avatar-emblem" hidden onchange="change_img(this)">
+            {#            </div>#}
+        </label>
+
+    </p>
+    <p>
+        报名须知:
+        <textarea name="enrol_notes" id="enrol_notes" cols="30"
+                  rows="10">{{ school.enrol_notes|default:"默认" }}</textarea>
+    </p>
+    <p>
+        毕业证图片地址:
+
+
+        <label>
+            <img id="avatar-img" src="{% static 'user/image/timg.jpg' %}" alt="">
+
+            <input type="file" name="diploma_images" id="diploma_images" hidden onchange="change_img(this)">
+
+        </label>
+    </p>
+    <p>
+        学位证图片地址:
+
+        <label>
+            <img id="avatar-img" src="{% static 'user/image/timg.jpg' %}" alt="">
+
+            <input type="file" name="degree_images" id="degree_images" hidden onchange="change_img(this)">
+
+        </label>
+    </p>
+    <p>
+        是否是985：
+        <input type="radio" name="is_985" value="True" checked>是
+        <input type="radio" name="is_985" value="False">否
+    </p>
+    <p>
+        是否是211：
+        <input type="radio" name="is_211" value="True" checked>是
+        <input type="radio" name="is_211" value="False">否
+    </p>
+    <p>
+        是否是双一流：
+        <input type="radio" name="is_double" value="True" checked>是
+        <input type="radio" name="is_double" value="False">
+    </p>
+    <p>
+        招生简章:
+        <textarea name="brief" id="brief" cols="30" rows="10">{{ school.brief|default:"默认" }}</textarea>
+    </p>
+    <p>
+        考试与毕业:
+        <textarea name="exam" id="exam" cols="30" rows="10">{{ school.exam|default:"默认" }}</textarea>
+    </p>
+    <p>
+        累计报读人数:
+        <input type="number" name="count" id="count" value="{{ school.count|default:'0' }}">人
+    </p>
+    <p>
+        状态:
+        <input type="radio" name="is_status" value="True" checked id="">可用
+        <input type="radio" name="is_status" value="False" id="">不可用
+    </p>
+    <p>
+        院校所在省市:
+        <select name="sch_pro" id="sch_pro" onchange="have_city(this)">
+            <option value="0">请选择省份</option>
+            {% for pro in province.all %}
+                <option value="{{ pro.provinceid }}">{{ pro }}</option>
+            {% endfor %}
+        </select>
+        <select name="sch_city" id="city">
+            <option value="1">请选择市</option>
+        </select>
+    </p>
+    <p id="type">
+        学校类型:
+        {% for sch in sch_type %}
+            <input type="checkbox" id="school_type" name="school_type" value="{{ sch.id }}">  {{ sch.type_name }}
+        {% endfor %}
+
+    </p>
+    <p id="feature">
+        学校特征:
+
+        {% for sch_feature in sch_features %}
+            <input type="checkbox" id="school_feature" name="school_feature" value="{{ sch_feature.id }}">
+            {{ sch_feature.feature_name }}
+        {% endfor %}
+    </p>
+
+
+    <div>
+        <button id="btn">点击修改数据</button>
+    </div>
+</div>
+
+
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script>
+
+    let change_img = (op) => {
+        var this_op = op;
+        var choose_file = $(this_op)[0].files[0]; // 获取用户最后一次选择的图片
+        var reader = new FileReader(); // 创建一个新的FileReader对象，用来读取文件信息
+        reader.readAsDataURL(choose_file); // 读取用户上传的图片路径
+        reader.onload = function () {
+            $(this_op).prev().attr("src", reader.result)
+        }
+    };
+
+    function have_city(temp) {
+        var op = temp;
+        proid = $(op).val();//选择省份的id
+        $.ajax({
+            url: '/user/get_city/',
+            type: 'post',
+            data: {
+                'proid': proid
+            },
+            success: (info) => {
+                var city = $('#city');
+                city.empty().append('<option value="1">请选择市</option>');
+                $.each(info.data, function (index, item) {
+                    city.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+
+    }
+
+    $("#btn").click(() => {
+        // 获取用户id
+        let sch_id = $(".edit").data('id');
+        //console.log(sch_id);
+
+        let data = get_str_val(); // 文字数据
+        let formdata = get_img_val(); // 图片数据
+
+
+        let sch_pro = $('#sch_pro option:selected').val(); //所在省份
+        let sch_city = $('#city option:selected').val(); //所在城市
+
+        formdata.append('data', data);
+        formdata.append('sch_pro', sch_pro);
+        formdata.append('sch_city', sch_city);
+        formdata.append('sch_id', sch_id);
+
+        $.ajax({
+            processData: false,
+            contentType: false,
+            url: '/school/update_sch/',
+            type: 'post',
+            async: true,
+            data: formdata,
+            success: (data) => {
+                console.log(data);
+                alert(data)
+            }
+        })
+
+
+    });
+
+    function get_img_val() {
+        let banner = $("#avatar-banner")[0].files[0];
+        let emblem = $("#avatar-emblem")[0].files[0]; // 校徽
+        let diploma = $("#diploma_images")[0].files[0]; // 毕业证图片
+        let degree = $("#degree_images")[0].files[0]; // 学位证图片地址
+        console.log(banner);
+
+        if (banner === 'undefined')
+            banner = '';
+        if (emblem === 'undefined')
+            emblem = '';
+        if (diploma === 'undefined')
+            diploma = '';
+        if (degree === 'undefined')
+            degree = '';
+
+
+        var formdata = new FormData();
+        formdata.append('banner', banner);
+        formdata.append('emblem', emblem);
+        formdata.append('diploma', diploma);
+        formdata.append('degree', degree);
+        return formdata;
+
+
+    }
+
+    function get_str_val() {
+
+        let description = $("#description").val(); // 院校描述
+        let motto = $('#motto').val(); // 校训
+
+        let enrol_notes = $("#enrol_notes").val();
+
+        let is_985 = $("[name='is_985']:checked").val(); // 是否是985
+        let is_211 = $("[name='is_211']:checked").val();
+        let is_double = $("[name='is_double']:checked").val();
+        let brief = $("#brief").val(); // 招生简章
+        let exam = $("#exam").val(); // 考试于毕业
+        let count = $("#count").val();// 累计报读人数
+        let is_status = $("[name='is_status']:checked").val();//是否可用
+
+
+
+        // 处理school_type 和 school_feature 等多选框
+        function show(par) {
+            obj = document.getElementById(par).getElementsByTagName('input');
+            check_val = [];
+            for (k in obj) {
+                if (obj[k].checked)
+                    check_val.push(obj[k].value);
+            }
+            return check_val;
+        }
+
+        school_type = show("type");
+        school_feature = show("feature");
+
+
+        let data = {
+            'description': description,
+            'motto': motto,
+            'enrol_notes': enrol_notes,
+            'is_985': is_985,
+            'is_211': is_211,
+            'is_double': is_double,
+            'brief': brief,
+            'exam': exam,
+            'count': count,
+            'is_status': is_status,
+            'school_type': school_type,
+            'school_feature': school_feature,
+
+        };
+        console.log(data);
+        data = JSON.stringify(data);
+        return data;
+
+
+    };
+
+</script>
+</html>

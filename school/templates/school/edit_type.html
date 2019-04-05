@@ -1,0 +1,107 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">编辑院校类型</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputinputNameEdit" class="col-sm-2 control-label">类型名称</label>
+		    <div class="col-sm-10">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control type_name"  name="type_name" value="{{ school_type.type_name}}">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">类型说明</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control notes" name="notes"  value="{{ school_type.notes}}">
+		    </div>
+          </div>
+        </form>
+      <input style="display: none" value="{{ school_type.id }}" id="typeid">
+
+      <div style="margin-left: 420px">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="submit">提交</button>
+      </div>
+    </div>
+</div>
+</div>
+
+<div class="clear" style="clear: both;"></div>
+<div id="messagee" class="messagee" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 120px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 122px;margin-top: 20px;color: black">编辑成功！</h4>
+    <div class="addd" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 140px;">返回</div>
+</div>
+
+<script>
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/school/school_type/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校类型');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/school/school_type/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校类型');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    var get_val = ()=>{
+        // 获取具体的值
+        var type_name = $('.type_name').val();// 名称
+        var notes = $('.notes').val();//说明描述
+
+        var type_data = {
+            'type_name':type_name,
+            'notes':notes,
+        };
+        type_data = JSON.stringify(type_data);
+        return type_data;
+    };
+
+    $('#submit').click(()=>{
+        var data = get_val();
+        var typeid = $('#typeid').val();
+        $.ajax({
+            url:'/school/update_type/',
+            type:'post',
+            async:false,
+            data:{
+                'data':data,
+                'type_id':typeid
+            },
+            success:(data)=>{
+                console.log(data);
+                    $('.messagee').css('display','block');
+                {#alert(data)#}
+                {#alert("修改成功，点击确认后跳转回首页......");#}
+            }
+        })
+    });
+
+    $('.addd').click(()=>{
+        $('.messagee').css('display','none');
+        {#$('.modal-dialog').css('display','none');#}
+        {#$("#main h1").css('display','none');#}
+        $.ajax({
+                    url: '/school/school_type/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('院校类型');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>

@@ -1,0 +1,136 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">添加新专业分类</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputinputNameEdit" class="col-sm-3 control-label">专业分类名称</label>
+		    <div class="col-sm-9">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control" name="catename"  id="catename" placeholder="请输入专业分类名称" onkeyup="checkcateName()">
+		    </div>
+		  </div>
+            <div class="form-group" id ="na" style="display: none;">
+                <p class="col-sm-3 control-label">提示</p>
+                <p class="col-sm-9 catename"></p>
+            </div>
+        </form>
+          <div id="mess"  style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 0px;left:130px;position: absolute;display: none">
+            <h4 style="font-size: 20px;margin-left: 82px;margin-top: 50px;color: red">专业分类已存在或输入错误！！</h4>
+            <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">重新添加</div>
+            <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+        </div>
+
+      <div style="margin-left: 420px">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="submit">提交</button>
+      </div>
+    </div>
+</div>
+</div>
+
+<div class="clear" style="clear: both;"></div>
+<div id="message" class="message" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 150px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 62px;margin-top: 20px;color: black">专业分类添加成功！</h4>
+    <div class="add" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 40px;">继续添加</div>
+    <div class="list" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: -38px;margin-left: 240px;">查看信息</div>
+</div>
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/major/major_cates/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('专业分类');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/major/major_cates/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('专业分类');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    //验证专业分类名是否符合规范，同时让他不能为空
+    function checkcateName() {
+        var catename = $('#catename').val();
+        var re = /^[\S]{1,10}$/;
+        if (!re.test(catename)) {
+            $('.catename').html("不能为空或输入有误！！")
+                .css({
+                    'color': 'red',
+                    'font-weight': 'bold'
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        } else {
+            $('.catename').html("输入正确")
+                .css({
+                    'color': "green"
+                });
+            $('#na').css({
+                'display': 'block',
+            });
+        }
+        return re.test(catename);
+    }
+
+    $('#submit').click(()=>{
+        var catename = $("#catename").val();
+
+        if(checkcateName()){
+            $.ajax({
+                url: '/major/addss_cates/',
+                type: 'post',
+                data: {
+                    'catename': catename,
+                },
+                success: (data) => {
+                    if (data['status'] === 'success') {  //判断
+                        $('.message').css('display', 'block');
+                    }else if(data['status'] === 'fail'){
+                        $('#mess').css('display', 'block'); //如果为fail，则跳出框
+                    }
+                }
+            })
+        }
+    });
+    //提交成功后跳出的框内的操作
+    $('.list').click(()=>{
+        $.ajax({
+            url:'/major/major_cates/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html('专业分类');
+                $('.info').html(data);
+            }
+        })
+    });
+    $('.add').click(()=>{
+        $('.message').css('display','none');
+        {#$('input').val('');#}
+        {#$('.alt').html('');#}
+        $.ajax({
+            url:'/major/add_cates/',
+            type:'get',
+            success:(data)=>{
+                $("#main h1").html("添加新专业分类");
+                $(".info").html(data);
+            }
+       })
+    });
+
+</script>

@@ -1,0 +1,203 @@
+<script src="/static/ckeditor/ckeditor.js"></script>
+<div class="edit" role="document" data-id="{{ posts.id }}"  style="width: 850px;margin-left: 100px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">编辑文章</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-2 control-label">文章标题:</label>
+		    <div class="col-sm-10">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control" id="post_title"  name="post_title" value="{{ posts.post_title }}">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">文章封面图片:</label>
+		    <div class="col-sm-10">
+		      <label>
+                <img class="avatar-image" src="/media/{{ posts.post_image}}" width="300" height="300" alt="">
+                <input type="file" id="post_image" name="post_image" value="/media/{{ posts.post_image}}">
+            </label>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">文章来源:</label>
+		    <div class="col-sm-10">
+		      <input type="text"  class="form-control" name="source" id="source" value="{{posts.source}}">
+		    </div>
+		  </div>
+         <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">来源链接:</label>
+		    <div class="col-sm-10">
+		      <input type="text"  class="form-control" name="source_link" id="source_link" value="{{posts.source_link}}">
+		    </div>
+		  </div>
+
+            <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">文章内容:</label>
+		    <div class="col-sm-10">
+		      <textarea name="post_content" id="post_content" cols="82" rows="10">{{ posts.post_content|default:"默认" }}</textarea>
+            </div>
+		  </div>
+
+            <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-2 control-label">阅读人数:</label>
+		    <div class="col-sm-3">
+                <input type="number"   name="views" id="views" value="{{ posts.views|default:'0' }}">人
+		    </div>
+		  </div>
+            <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-2 control-label">标签:</label>
+		    <div class="col-sm-3">
+		      <select class="form-control"  name="tags" id="tags">
+                <option value="{{ posts.tags.id}}">{{ posts.tags.name|default:'请选择标签' }}</option>
+                    {% for ta in tag %}
+                        <option value="{{ ta.id }}">{{ ta.name }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-2 control-label">相关院校:</label>
+		    <div class="col-sm-3">
+		      <select class="form-control"  name="post_school" id="post_school">
+                <option value="{{ posts.post_school.id}}">{{ posts.post_school.name|default:'请选择院校' }}</option>
+                    {% for sch in post_school %}
+                        <option value="{{ sch.id }}">{{ sch.name }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+		</form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="btn">提交</button>
+      </div>
+    </div>
+</div>
+<div class="clear" style="clear: both;"></div>
+<div id="messagee" class="messagee" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 700px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 122px;margin-top: 20px;color: black">编辑成功！</h4>
+    <div class="addd" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 140px;">返回</div>
+</div>
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/posts/posts_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('文章');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/posts/posts_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('文章');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+
+    CKEDITOR.on('instanceReady', function (ev) {
+            // 这个函数里面放的是富文本编辑器就绪之后执行的操作
+            console.log("富文本编辑器初始化成功");
+        });
+
+    // 初始化操作
+    var post_content = CKEDITOR.replace('post_content', {
+        height: 300
+    });
+
+
+    $("#post_image").on('change',()=>{
+        var choose_file = $("#post_image")[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(choose_file);//读取用户上传的图片路径
+        reader.onload = function(){
+            $(".avatar-image").attr('src',reader.result)
+        }
+
+    });
+
+    function get_str_val() {
+
+        let post_title = $("#post_title").val(); //
+        let source = $('#source').val(); //
+        let source_link = $("#source_link").val();
+        let views = $("#views").val();
+
+        let tags = $('#tags option:selected').val(); //
+        let post_school = $('#post_school option:selected').val(); //
+        {#var post_content = CKEDITOR.instances.post_content.getData(); //富文本编辑器的内容，带p标签，有换行#}
+        var post_content=CKEDITOR.instances.post_content.document.getBody().getText(); //取得纯文本,不带p标签，无换行
+
+        let data = {
+            'post_title': post_title,
+            'source': source,
+            'source_link': source_link,
+            'views': views,
+            'tags': tags,
+            'post_school': post_school,
+            'post_content':post_content,
+
+        };
+        console.log(data);
+        data = JSON.stringify(data);
+        return data;
+    }
+
+    $("#btn").click(() => {
+        // 获取用户id
+        let pos_id = $(".edit").data('id');
+        let data = get_str_val(); // 文字数据
+
+        formdata = new FormData();
+        formdata.append('data', data);
+        formdata.append('pos_id', pos_id);
+        formdata.append('post_image', $("#post_image")[0].files[0]);
+        console.log(formdata);
+
+        $.ajax({
+            processData: false,
+            contentType: false,
+            url: '/posts/update_pos/',
+            type: 'post',
+            async: true,
+            data: formdata,
+            success: (data) => {
+                console.log(data);
+                {#alert(data)#}
+                $('.messagee').css('display','block');
+           }
+        })
+
+
+  });
+
+    $('.addd').click(()=>{
+        $('.messagee').css('display','none');
+        $.ajax({
+                    url: '/posts/posts_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('文章');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+</script>

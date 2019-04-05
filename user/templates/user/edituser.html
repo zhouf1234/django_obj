@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户信息</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<body>
+<form>
+
+    <table>
+        <tr>
+            <td><b>下面是必填信息</b></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>用户名:</td>
+            <td><input type="text" name="nickname" placeholder="请输入用户名" required
+                       value="{{ users.nickname }}" disabled></td>
+        </tr>
+        {#    用户密码不能在后台进行更改#}
+        {#    <tr>#}
+        {#        <td>密码：</td>#}
+        {#        <td><input type="password" name="password" placeholder="请输入密码" required maxlength="18" minlength="6"></td>#}
+        {#    </tr>#}
+
+        <tr>
+            <td>邮箱：</td>
+            <td><input type="email" name="email" placeholder="请输入邮箱" value='{{ users.email|default:"xx@xx.com" }}'
+                       class="email"></td>
+        </tr>
+        <tr>
+            <td>已下是选填信息：</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>手机号：</td>
+            <td><input type="text" name="phone" class="phone" placeholder="请输入手机号"
+                       value='{{ users.phone|default:"-----------" }}'>
+            </td>
+        </tr>
+        <tr>
+            <td>是否报过名：</td>
+            <td>
+                <input type="radio" name="is_student" value="True" checked> 是
+                <input type="radio" name="is_student" value="False"> 否
+            </td>
+        </tr>
+        <tr>
+            <td>学历：</td>
+            <td>
+                <input type="radio" name="education" value="wm" checked>文盲
+                <input type="radio" name="education" value="xx">小学
+                <input type="radio" name="education" value="cz">初中
+                <input type="radio" name="education" value="gz">高中
+                <input type="radio" name="education" value="zz">中专
+                <input type="radio" name="education" value="dz">大专
+                <input type="radio" name="education" value="bk">本科
+                <input type="radio" name="education" value="yjs">研究生
+            </td>
+        </tr>
+        <tr>
+            <td>学位：</td>
+            <td>
+                <input type="radio" name="dgree" value="w" checked>无
+                <input type="radio" name="dgree" value="xs">学士
+                <input type="radio" name="dgree" value="ss">硕士
+                <input type="radio" name="dgree" value="bs">博士
+            </td>
+        </tr>
+        <tr>
+            <td>具体地址：</td>
+            <td>
+                <b>请选择省：</b>
+                <select name="province" id="province" onchange="have_city(this)">
+                    <option value="">请选择省份</option>
+                    {% for province in provinces.all %}
+                        <option value="{{ province.provinceid }}">{{ province }}</option>
+                    {% endfor %}
+
+                </select>
+                <b>请选择市：</b>
+                <select name="city" id="city" onchange="have_country(this)">
+                    <option value="">请选择市</option>
+                </select>
+                <b>请选择具体区县</b>
+                <select name="country" id="country">
+                    <option value="">请选择区县</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>专业：</td>
+            <td><input type="text" name="major" id="major" placeholder="请输入专业" value='{{ users.major|default:"默认" }}'></td>
+        </tr>
+        <tr>
+            <td>毕业院校：</td>
+            <td><input type="text" name="school" id="school" placeholder="请输入毕业院校" value='{{ users.school|default:"默认" }}'></td>
+        </tr>
+        <tr>
+            <td>状态：</td>
+            <td>
+                <input type="radio" name="is_status" value="True" checked> 可用
+                <input type="radio" name="is_status" value="False"> 不可用
+            </td>
+        </tr>
+    <input type="hidden" value="{{ users.id }}" id="userid">
+        <tr>
+            <td>提交数据：</td>
+            <td><input type="submit" value="确认" id="submit"></td>
+        </tr>
+    </table>
+</form>
+</body>
+<script>
+    var get_val = ()=>{
+        // 获取具体的值
+        var email = $('.email').val();// 邮箱
+        var phone = $('.phone').val();//手机号
+        var is_student = $('input[name="is_student"]:checked').val(); // 是否报过名
+        var education = $('input[name="education"]:checked').val(); // 学历
+        var dgree = $('input[name="dgree"]:checked').val(); // 学位
+        var province = $('#province option:selected').val(); // 省份
+        var city = $('#city option:selected').val(); // 城市
+        var country = $('#country option:selected').val(); // 区县
+        var major = $('#major').val(); // 专业
+        var school = $("#school").val(); // 学校
+        var is_status = $('input[name="is_status"]:checked').val(); // 状态
+        var user_data = {
+            'email':email,
+            'phone':phone,
+            'is_student':is_student,
+            'education':education,
+            'dgree':dgree,
+            'province':province,
+            'city':city,
+            'country':country,
+            'major':major,
+            'school':school,
+            'is_status':is_status,
+        };
+        user_data = JSON.stringify(user_data);
+        return user_data;
+    };
+    {#console.log(get_val());#}
+    $('#submit').click(()=>{
+
+        var data = get_val();
+        {#data = eval(data);#}
+
+        //var data = {};
+        {#var info = $('form').serialize();#}
+        {#var data = decodeURIComponent(info,true); // 反序列化#}
+        var userid = $('#userid').val();
+        $.ajax({
+            url:'/user/user_info/',
+            type:'post',
+            async:false,
+            data:{
+                'data':data,
+                'user_id':userid
+            },
+            success:(data)=>{
+                console.log(data);
+                {#alert(data)#}
+                alert("修改成功，点击确认后跳转回首页......");
+            }
+        })
+    });
+
+    function have_city(temp) {
+        var op = temp;
+        proid = $(op).val();//选择省份的id
+        $.ajax({
+            url: '/user/get_city/',
+            type: 'post',
+            data: {
+                'proid': proid
+            },
+            success: (info) => {
+                var city = $('#city');
+                var country = $('#country');
+                country.empty().append('<option value="">请选择区县</option>');
+                city.empty().append('<option value="">请选择市</option>');
+                $.each(info.data, function (index, item) {
+                    city.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+
+    }
+
+    function have_country(temp) {
+        var op = temp;
+        cityid = $(op).val();
+        $.ajax({
+            url: '/user/get_country/',
+            type: 'post',
+            data: {
+                'cityid': cityid
+            },
+            success: (info) => {
+                var country = $('#country');
+                country.empty().append('<option value="">请选择区县</option>');
+                $.each(info.data, function (index, item) {
+                    country.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+    }
+
+</script>
+</html>

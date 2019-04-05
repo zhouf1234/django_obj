@@ -1,0 +1,281 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" id="close0">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">编辑报名信息</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="editForm">
+		  <div class="form-group">
+		    <label for="inputEmailEdit" class="col-sm-3 control-label">真实姓名</label>
+		    <div class="col-sm-9">
+{#		      <input type="email" class="form-control" id="inputEmailEdit" value="fmuncle@163" readonly>#}
+                <input type="text" class="form-control real_name"  name="real_name" value="{{ order.real_name}}">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-3 control-label">身份证号</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control idcard" name="idcard"  value="{{ order.idcard }}">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputNameEdit" class="col-sm-3 control-label">电话</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control phone" name="phone"  value="{{ order.phone }}">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">用户id</label>
+		    <div class="col-sm-9">
+		      <input type="text" class="form-control" name="user"  value="{{ order.user.id}}" readonly>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputRealNameEdit" class="col-sm-3 control-label">专业分类</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="major_cates" id="major_cates" onchange="have_catess(this)">
+                <option value="{{ order.major_cates.id}}">{{ order.major_cates.catename|default:'请选择专业分类' }}</option>
+                    {% for cate in major_cates %}
+                        <option value="{{ cate.id }}">{{ cate.catename }}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">专业名称</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="major" id="major" onchange="have_level(this)"> {# 不能异步。。。还是写异步吧 #}
+                <option value="{{ order.major.id}}">{{ order.major.major_name|default:'请选择专业' }}</option>
+                    {% for maj in major %}
+                        {% if maj.major_category.id == order.major_cates.id %}
+                            <option value="{{ maj.id }}">{{ maj.major_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+        <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">专业层次</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="order_level" id="order_level" onchange="have_schools(this)">
+                <option value=" {{ order.order_level.level }}">
+                    {% if order.order_level.level == 0 %}
+                                高起专
+                    {% elif order.order_level.level == 1 %}
+                                高起本
+                    {% elif order.order_level.level == 2 %}
+                                专升本
+                    {% endif %}
+                </option>
+
+                    {% for maj in o_mj_lis %}
+                            <option value="{{ maj.level }}">
+                                {% if maj.level == 0 %}
+                                            高起专
+                                {% elif maj.level == 1 %}
+                                            高起本
+                                {% elif maj.level == 2 %}
+                                            专升本
+                                {% endif %}
+                            </option>
+                    {% endfor %}
+
+                </select>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputIdEdit" class="col-sm-3 control-label">院校名称</label>
+		    <div class="col-sm-9">
+		      <select class="form-control"  name="order_school" id="order_school">
+                <option value="{{ order.order_school.id}}">{{ order.order_school.name|default:'请选择院校' }}</option>
+                    {% for maj in majorss %}
+                            <option value="{{ maj.school.id }}">{{ maj.school.name}}</option>
+                    {% endfor %}
+                </select>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="inputEducationEdit" class="col-sm-3 control-label">付款/录取状态</label>
+		    <div class="col-sm-9">
+                <input type="radio" name="status" value="wfk" checked>未付款
+                <input type="radio" name="status" value="yfk">已付款
+                <input type="radio" name="status" value="ylq">已录取
+                <input type="radio" name="status" value="ysx">已失效
+		    </div>
+		  </div>
+
+		</form>
+      </div>
+
+      <input style="display: none" value="{{ order.id }}" id="orderid">
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" id="close">取消</button>
+        <button type="submit" class="btn btn-primary" form="addForm" id="submit">提交</button>
+      </div>
+    </div>
+</div>
+
+<div class="clear" style="clear: both;"></div>
+<div id="messagee" class="messagee" style="width: 400px;height: 200px;background-color: white;border: 2px solid #EAF2D3;top: 320px;left:360px;position: absolute;display: none">
+    <h4 style="font-size: 32px;margin-left: 122px;margin-top: 20px;color: black">编辑成功！</h4>
+    <div class="addd" style="width: 104px;height: 38px;border: 1px solid #98bf21;cursor: pointer;text-align: center;font-size: 22px;margin-top: 50px;margin-left: 140px;">返回</div>
+</div>
+
+<script>
+
+    $('#close').click(()=>{
+          $.ajax({
+                    url: '/order/order_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('报名信息');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+    $('#close0').click(()=>{
+          $.ajax({
+                    url: '/order/order_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('报名信息');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+    function have_catess(temp) {
+        var op = temp;
+        catesid = $(op).val();//实际获取的是专业分类的id
+        $.ajax({
+            url: '/order/get_catess/',
+            type: 'post',
+            data: {
+                'catesid': catesid
+            },
+            success: (info) => {
+                var major = $('#major');
+                var order_school = $('#order_school');
+                var order_level = $('#order_level');
+                order_school.empty().append('<option value="">请选择院校</option>');
+                major.empty().append('<option value="">请选择专业</option>');
+                order_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    major.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+
+    }
+
+    function have_level(temp) {
+        var op = temp;
+        majorid = $(op).val(); //实际获取的是专业列表的id
+        $.ajax({
+            url: '/order/get_level/',
+            type: 'post',
+            data: {
+                'majorid': majorid
+            },
+            success: (info) => {
+                var order_level = $('#order_level');
+                var order_school = $('#order_school');
+                order_school.empty().append('<option value="">请选择院校</option>');
+                order_level.empty().append('<option value="">请选择层次</option>');
+                $.each(info.data, function (index, item) {
+                    order_level.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+    }
+
+    function have_schools(temp) {
+        var op = temp;
+        levelid = $(op).val(); //实际获取的是层次的值，0，1，2
+
+        var maj = $('#major').val();
+
+        $.ajax({
+            url: '/order/get_schools/',
+            type: 'post',
+            data: {
+                'levelid': levelid,
+                'maj':maj,
+            },
+            success: (info) => {
+                var order_school = $('#order_school');
+                order_school.empty().append('<option value="">请选择院校</option>');
+                $.each(info.data, function (index, item) {
+                    order_school.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                })
+            }
+        })
+    }
+
+    var get_val = ()=>{
+        // 获取具体的值
+        var real_name = $('.real_name').val();
+        var phone = $('.phone').val();
+        var idcard = $('.idcard').val();
+        var status = $('input[name="status"]:checked').val();
+
+        var major_cates = $('#major_cates option:selected').val(); //
+        var major = $('#major option:selected').val(); //
+        var order_level = $('#order_level option:selected').val();
+        var order_school = $('#order_school option:selected').val(); //
+
+        var ord_data = {
+            'real_name':real_name,
+            'phone':phone,
+            'idcard':idcard,
+            'status':status,
+            'major_cates':major_cates,
+            'major':major,
+            'order_school':order_school,
+            'order_level':order_level,
+        };
+        ord_data = JSON.stringify(ord_data);
+        return ord_data;
+    };
+    console.log(get_val());
+    $('#submit').click(()=>{
+
+        var data = get_val();
+            console.log(get_val());
+        var orderid = $('#orderid').val();
+        $.ajax({
+            url:'/order/update_ord/',
+            type:'post',
+            async:false,
+            data:{
+                'data':data,
+                'ord_id':orderid
+            },
+            success:(data)=>{
+                console.log(data);
+                    $('.messagee').css('display','block');
+                {#alert(data)#}
+                {#alert("修改成功，点击确认后跳转回首页......");#}
+            }
+        })
+    });
+
+    $('.addd').click(()=>{
+        $('.messagee').css('display','none');
+        $.ajax({
+                    url: '/order/order_list/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('报名信息');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+
+</script>

@@ -1,0 +1,27 @@
+* {
+
+    text-decoration: none;
+}
+.clear {
+    clear: both;
+}
+/*div.title {*/
+    /*width: 100%;*/
+/*}*/
+div.main {
+    background: #cccccc;
+    width: 100%;
+}
+
+div.footer {
+    width: 100%;
+}
+div.left {
+    float: left;
+}
+div.right {
+    float: left;
+}
+div.footer {
+    text-align: center;
+}

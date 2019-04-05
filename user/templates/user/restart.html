@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div>
+    <p>
+        <input type="hidden" value="{{ users.id }}" id="info">
+        当前用户名:
+        <input type="text" value="{{ users.nickname }}" disabled>
+    </p>
+    <p>
+        当前邮箱地址:
+        <input type="email" value="{{ users.email }}" disabled>
+    </p>
+    <p>
+        点击重置密码:
+        <input type="button" id="restart" value="发送重置邮件">
+    </p>
+    <p>
+        <button id="submitt">返回</button>
+    </p>
+</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script>
+     $('#restart').click(()=>{
+        let user_id = $('#info').val();
+        $.ajax({
+            url:'/user/restart_pwd/',
+            type:'post',
+            data:{
+                'user_id':user_id
+            },
+            success:(data)=>{
+                console.log(data);
+            }
+        })
+    });
+
+     $('#submitt').click(()=>{
+        {#$('.modal-dialog').css('display','none');#}
+        {#$("#main h1").css('display','none');#}
+          $.ajax({
+                    url: '/user/',
+                    type: 'get',
+                    success:(data)=>{
+                        $("#main>h1").html('用户列表');
+                        $('#main>.info').html(data);
+                    }
+                })
+    });
+</script>
+</html>
